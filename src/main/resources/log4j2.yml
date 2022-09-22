@@ -1,0 +1,47 @@
+Configuration:
+  status: info
+  name: log4j2Settings
+
+  Appenders:
+    Console:
+      name: STDOUT
+      PatternLayout:
+        Pattern: "%d %highlight{%-5p} [%t] %style{%c{3.}:%L}{cyan} %highlight{--} %msg%n%throwable"
+
+    File:
+      name: FILE
+      fileName: application.log
+      PatternLayout:
+        Pattern: "%d %-5p [%t]%n%c:%L%n%msg%n%n"
+      Filters:
+        ThresholdFilter:
+          level: debug
+
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: STDOUT
+        - ref: FILE
+          level: warn
+
+    logger:
+      - name: ru.clevertec.ecl
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: STDOUT
+          - ref: FILE
+            level: warn
+      - name: org.springframework
+        level: info
+        additivity: false
+        AppenderRef:
+          - ref: STDOUT
+          - ref: FILE
+            level: warn
+      - name: _org.springframework
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: STDOUT
