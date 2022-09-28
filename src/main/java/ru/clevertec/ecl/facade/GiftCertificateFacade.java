@@ -9,6 +9,8 @@ import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
 
 public interface GiftCertificateFacade {
 
+    Page<GiftCertificateDto> findByFilter(Pageable pageable, GiftCertificateFilterDto filterDto);
+
     GiftCertificateDto findById(long id);
 
     GiftCertificateDto create(GiftCertificateCreationDto createDto);
@@ -16,6 +18,4 @@ public interface GiftCertificateFacade {
     GiftCertificateDto updateById(long id, Map<String, Object> newFieldValues);
 
     void deleteById(long id);
-
-    Page<GiftCertificateDto> findByFilter(Pageable pageable, GiftCertificateFilterDto filterDto);
 }

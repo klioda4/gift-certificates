@@ -8,6 +8,8 @@ import ru.clevertec.ecl.dto.request.TagRequestDto;
 
 public interface TagFacade {
 
+    Page<TagDto> findAll(Pageable pageable);
+
     TagDto findById(long id);
 
     TagDto create(TagRequestDto createDto);
@@ -15,6 +17,4 @@ public interface TagFacade {
     TagDto updateById(long id, Map<String, Object> newFieldValues);
 
     void deleteById(long id);
-
-    Page<TagDto> findAll(Pageable pageable);
 }

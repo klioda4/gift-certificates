@@ -3,6 +3,7 @@ plugins {
     id 'war'
     id "io.freefair.lombok" version "6.5.1"
     id "io.spring.dependency-management" version "1.0.14.RELEASE"
+    id 'org.springframework.boot' version '2.7.3'
 }
 
 group 'ru.clevertec.ecl'
@@ -14,66 +15,41 @@ repositories {
 
 dependencyManagement {
     dependencies {
-        dependencySet(group: 'org.springframework', version: '5.3.23') {
-            entry 'spring-webmvc'
-            entry 'spring-test'
-        }
         dependencySet(group: 'org.mapstruct', version: '1.5.2.Final') {
             entry 'mapstruct'
             entry 'mapstruct-processor'
         }
-        dependencySet(group: 'io.springfox', version: '3.0.0') {
-            entry 'springfox-swagger2'
-            entry 'springfox-swagger-ui'
-        }
-        dependencySet(group: 'org.junit.jupiter', version: '5.9.0') {
-            entry 'junit-jupiter-api'
-            entry 'junit-jupiter-engine'
-        }
-        dependencySet(group: 'org.apache.logging.log4j', version: '2.19.0') {
+        dependencySet(group: 'org.apache.logging.log4j', version: '2.18.0') {
+            entry 'log4j-api'
             entry 'log4j-core'
+            entry 'log4j-jul'
             entry 'log4j-slf4j-impl'
         }
-        dependency 'org.apache.tomee:javaee-api:8.0-6'
-        dependency 'org.springframework.data:spring-data-jpa:2.7.3'
-        dependency 'org.hibernate:hibernate-core:5.6.10.Final'
+        dependency 'io.springfox:springfox-boot-starter:3.0.0'
         dependency 'org.postgresql:postgresql:42.5.0'
-        dependency 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.4'
-        dependency 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
-        dependency 'org.yaml:snakeyaml:1.32'
-        dependency 'com.google.code.gson:gson:2.9.1'
         dependency 'commons-beanutils:commons-beanutils:1.9.4'
-        dependency 'org.mockito:mockito-junit-jupiter:4.8.0'
     }
+}
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 }
 
 dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.springframework.boot:spring-boot-starter-log4j2'
+    compileOnly 'io.springfox:springfox-boot-starter'
+
     compileOnly 'org.mapstruct:mapstruct'
-    runtimeOnly 'org.yaml:snakeyaml'
-    implementation 'commons-beanutils:commons-beanutils'
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
-
-    implementation 'org.apache.tomee:javaee-api'
-    implementation 'org.springframework:spring-webmvc'
-    implementation 'org.springframework.data:spring-data-jpa'
-    implementation 'org.hibernate:hibernate-core'
     runtimeOnly 'org.postgresql:postgresql'
-
-    implementation 'io.springfox:springfox-swagger2'
-    implementation 'io.springfox:springfox-swagger-ui'
-
-    compileOnly 'org.slf4j:slf4j-api'
-    runtimeOnly 'org.apache.logging.log4j:log4j-core'
-    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j-impl'
     runtimeOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    implementation 'commons-beanutils:commons-beanutils'
+//    implementation 'org.hibernate:hibernate-core'
 
-    testImplementation 'org.mockito:mockito-junit-jupiter'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation 'org.springframework:spring-test'
-
-    testRuntimeOnly 'org.apache.tomee:javaee-api'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'com.h2database:h2'
     testImplementation 'org.mapstruct:mapstruct'
 }
 

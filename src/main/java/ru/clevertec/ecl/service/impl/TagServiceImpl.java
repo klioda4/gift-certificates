@@ -2,7 +2,6 @@ package ru.clevertec.ecl.service.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import javax.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -68,7 +67,7 @@ public class TagServiceImpl implements TagService {
         try {
             BeanUtils.populate(entity, newFieldValues);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new BadRequestException(e);
+            throw new IllegalArgumentException("Incorrect field name or value was passed to update", e);
         }
     }
 

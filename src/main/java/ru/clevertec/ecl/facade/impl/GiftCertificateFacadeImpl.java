@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.dto.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreationDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
@@ -21,7 +20,12 @@ public class GiftCertificateFacadeImpl implements GiftCertificateFacade {
     private final GiftCertificateDtoMapper mapper;
 
     @Override
-    @Transactional(readOnly = true)
+    public Page<GiftCertificateDto> findByFilter(Pageable pageable, GiftCertificateFilterDto filterDto) {
+        return service.findByFilters(pageable, filterDto)
+            .map(mapper::mapToDto);
+    }
+
+    @Override
     public GiftCertificateDto findById(long id) {
         return mapper.mapToDto(
             service.findById(id));
@@ -42,12 +46,5 @@ public class GiftCertificateFacadeImpl implements GiftCertificateFacade {
     @Override
     public void deleteById(long id) {
         service.deleteById(id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<GiftCertificateDto> findByFilter(Pageable pageable, GiftCertificateFilterDto filterDto) {
-        return service.findByFilters(pageable, filterDto)
-            .map(mapper::mapToDto);
     }
 }

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.domain.Example;
@@ -38,7 +37,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final TagService tagService;
 
     @Override
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public Page<GiftCertificate> findByFilters(Pageable pageable, GiftCertificateFilterDto filterDto) {
         ExampleMatcher filtersMatcher = ExampleMatcher.matchingAll()
             .withMatcher(NAME_FIELD, GenericPropertyMatchers.contains().ignoreCase())
@@ -47,13 +46,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             .name(filterDto.getNameSample())
             .description(filterDto.getDescriptionSample())
             .build();
-        certificateSample.getTags().add(Tag.builder().name(filterDto.getTagName()).build());
         Example<GiftCertificate> filterExample = Example.of(certificateSample, filtersMatcher);
         return repository.findAll(filterExample, pageable);
     }
 
     @Override
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public GiftCertificate findById(long id) throws ObjectNotFoundException {
         return repository.findById(id)
             .orElseThrow(() -> new ObjectNotFoundException("GiftCertificate", "id", id));
@@ -88,7 +86,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         try {
             BeanUtils.populate(entity, newFieldValues);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new BadRequestException(e);
+            throw new IllegalArgumentException("Incorrect field name or value was passed to update", e);
         }
     }
 
@@ -115,7 +113,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             List<Tag> loadedTags = findOrCreateAll(tags);
             fieldValues.put(TAGS_FIELD, loadedTags);
         } catch (ClassCastException e) {
-            throw new BadRequestException(e);
+            throw new IllegalArgumentException("Incorrect value for field \"tags\"", e);
         }
     }
 }

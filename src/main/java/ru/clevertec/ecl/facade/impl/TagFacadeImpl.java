@@ -19,6 +19,12 @@ public class TagFacadeImpl implements TagFacade {
     private final TagDtoMapper mapper;
 
     @Override
+    public Page<TagDto> findAll(Pageable pageable) {
+        return service.findAll(pageable)
+            .map(mapper::mapToDto);
+    }
+
+    @Override
     public TagDto findById(long id) {
         return mapper.mapToDto(
             service.findById(id));
@@ -39,11 +45,5 @@ public class TagFacadeImpl implements TagFacade {
     @Override
     public void deleteById(long id) {
         service.deleteById(id);
-    }
-
-    @Override
-    public Page<TagDto> findAll(Pageable pageable) {
-        return service.findAll(pageable)
-            .map(mapper::mapToDto);
     }
 }
