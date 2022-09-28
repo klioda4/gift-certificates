@@ -1,12 +1,14 @@
 package ru.clevertec.ecl.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.clevertec.ecl.util.serialization.jackson.LocalDateTimeJsonSerializer;
 
 @Data
 @Builder
@@ -19,8 +21,12 @@ public class GiftCertificateDto {
     private String description;
     private BigDecimal price;
     private int duration;
-    private LocalDate createDate;
-    private LocalDate lastUpdateDate;
 
-    private Set<TagDto> tags;
+    @JsonSerialize(using = LocalDateTimeJsonSerializer.class)
+    private LocalDateTime createDate;
+
+    @JsonSerialize(using = LocalDateTimeJsonSerializer.class)
+    private LocalDateTime lastUpdateDate;
+
+    private List<TagDto> tags;
 }

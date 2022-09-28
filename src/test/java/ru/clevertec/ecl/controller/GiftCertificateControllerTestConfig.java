@@ -6,9 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import ru.clevertec.ecl.config.AppWebMvcConfigurer;
-import ru.clevertec.ecl.dto.GiftCertificateDto;
-import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
-import ru.clevertec.ecl.service.CrudService;
+import ru.clevertec.ecl.service.GiftCertificateService;
 
 @Configuration
 @EnableWebMvc
@@ -16,7 +14,7 @@ import ru.clevertec.ecl.service.CrudService;
 public class GiftCertificateControllerTestConfig {
 
     @Bean
-    public CrudService<GiftCertificateDto, GiftCertificateCreateDto, Long> crudGiftCertificateService() {
-        return Mockito.mock(CrudService.class);
+    public GiftCertificateService crudGiftCertificateService() {
+        return Mockito.mock(GiftCertificateService.class);
     }
 }

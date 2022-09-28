@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.ecl.dto.TagDto;
-import ru.clevertec.ecl.dto.request.TagCreateDto;
-import ru.clevertec.ecl.service.CrudService;
+import ru.clevertec.ecl.dto.request.TagRequestDto;
+import ru.clevertec.ecl.facade.TagFacade;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,33 +25,33 @@ import ru.clevertec.ecl.service.CrudService;
 @RequestMapping("/api/v1/tags")
 public class TagController {
 
-    private final CrudService<TagDto, TagCreateDto, Long> service;
+    private final TagFacade facade;
 
     @GetMapping
     public Page<TagDto> findAll(Pageable pageable) {
         log.info("GET request to /api/v1/tags with params: pageable = {}", pageable);
-        return service.findAll(pageable);
+        return facade.findAll(pageable);
     }
 
     @GetMapping("/{id}")
     public TagDto findById(@PathVariable long id) {
-        return service.findById(id);
+        return facade.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDto create(@RequestBody TagCreateDto newItem) {
-        return service.create(newItem);
+    public TagDto create(@RequestBody TagRequestDto newItem) {
+        return facade.create(newItem);
     }
 
     @PatchMapping("/{id}")
     public TagDto updateById(@PathVariable long id, @RequestBody Map<String, Object> newFieldValues) {
-        return service.updateById(id, newFieldValues);
+        return facade.updateById(id, newFieldValues);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable long id) {
-        service.deleteById(id);
+        facade.deleteById(id);
     }
 }

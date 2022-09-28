@@ -6,9 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,22 +17,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.jpa.repository.JpaRepository;
-import ru.clevertec.ecl.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.GiftCertificate;
-import ru.clevertec.ecl.util.mapping.ext.GiftCertificateMapper;
+import ru.clevertec.ecl.repository.GiftCertificateRepository;
+import ru.clevertec.ecl.service.TagService;
+import ru.clevertec.ecl.util.mapping.GiftCertificateDtoMapper;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
 
     private static GiftCertificateServiceImpl testService;
-    private static JpaRepository<GiftCertificate, Long> mockRepository;
+    private static GiftCertificateRepository mockRepository;
+    private static TagService mockTagService;
 
     @BeforeAll
     static void beforeAll() {
-        GiftCertificateMapper mapper = Mappers.getMapper(GiftCertificateMapper.class);
-        mockRepository = Mockito.mock(JpaRepository.class);
-        testService = new GiftCertificateServiceImpl(mockRepository, mapper);
+        GiftCertificateDtoMapper mapper = Mappers.getMapper(GiftCertificateDtoMapper.class);
+        mockTagService = Mockito.mock(TagService.class);
+        mockRepository = Mockito.mock(GiftCertificateRepository.class);
+        testService = new GiftCertificateServiceImpl(mockRepository, mapper, mockTagService);
     }
 
     @Test
@@ -46,9 +48,9 @@ class GiftCertificateServiceImplTest {
         when(mockRepository.save(any()))
             .then(returnsFirstArg());
 
-        GiftCertificateDto actualDto = testService.updateById(givenId, givenUpdateValues);
-        GiftCertificateDto expectedDto = getExpectedDtoAfterUpdate();
-        assertEquals(expectedDto, actualDto);
+        GiftCertificate actual = testService.updateById(givenId, givenUpdateValues);
+        GiftCertificate expected = getExpectedDtoAfterUpdate();
+        assertEquals(expected, actual);
     }
 
     private GiftCertificate createGiftCertificate() {
@@ -57,21 +59,21 @@ class GiftCertificateServiceImplTest {
             .name("cert")
             .description("description")
             .price(BigDecimal.valueOf(5L))
-            .createDate(LocalDate.of(2050, 1, 1))
-            .lastUpdateDate(LocalDate.of(2050, 1, 2))
-            .tags(new HashSet<>())
+            .createDate(LocalDateTime.of(2050, 1, 1, 0, 0))
+            .lastUpdateDate(LocalDateTime.of(2050, 1, 2, 0, 0))
+            .tags(new ArrayList<>())
             .build();
     }
 
-    private GiftCertificateDto getExpectedDtoAfterUpdate() {
-        return GiftCertificateDto.builder()
+    private GiftCertificate getExpectedDtoAfterUpdate() {
+        return GiftCertificate.builder()
             .id(1L)
             .name("new_name")
             .description("new_description")
             .price(BigDecimal.valueOf(5L))
-            .createDate(LocalDate.of(2050, 1, 1))
-            .lastUpdateDate(LocalDate.of(2050, 1, 2))
-            .tags(new HashSet<>())
+            .createDate(LocalDateTime.of(2050, 1, 1, 0, 0))
+            .lastUpdateDate(LocalDateTime.of(2050, 1, 2, 0, 0))
+            .tags(new ArrayList<>())
             .build();
     }
 }

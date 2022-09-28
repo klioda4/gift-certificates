@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.ecl.dto.GiftCertificateDto;
-import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
-import ru.clevertec.ecl.service.CrudService;
+import ru.clevertec.ecl.dto.request.GiftCertificateCreationDto;
+import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
+import ru.clevertec.ecl.facade.GiftCertificateFacade;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,33 +26,34 @@ import ru.clevertec.ecl.service.CrudService;
 @RequestMapping("/api/v1/gift-certificates")
 public class GiftCertificateController {
 
-    private final CrudService<GiftCertificateDto, GiftCertificateCreateDto, Long> service;
+    private final GiftCertificateFacade facade;
 
     @GetMapping
-    public Page<GiftCertificateDto> findAll(Pageable pageable) {
-        log.info("GET request to /api/v1/gift-certificates with params: pageable = {}", pageable);
-        return service.findAll(pageable);
+    public Page<GiftCertificateDto> findByFilter(Pageable pageable, GiftCertificateFilterDto filterDto) {
+        log.info("GET request to /api/v1/gift-certificates with params: pageable = {}, filterDto = {}", pageable,
+            filterDto);
+        return facade.findByFilter(pageable, filterDto);
     }
 
     @GetMapping("/{id}")
     public GiftCertificateDto findById(@PathVariable long id) {
-        return service.findById(id);
+        return facade.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto create(@RequestBody GiftCertificateCreateDto newItem) {
-        return service.create(newItem);
+    public GiftCertificateDto create(@RequestBody GiftCertificateCreationDto newItem) {
+        return facade.create(newItem);
     }
 
     @PatchMapping("/{id}")
     public GiftCertificateDto updateById(@PathVariable long id, @RequestBody Map<String, Object> newFieldValues) {
-        return service.updateById(id, newFieldValues);
+        return facade.updateById(id, newFieldValues);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable long id) {
-        service.deleteById(id);
+        facade.deleteById(id);
     }
 }
