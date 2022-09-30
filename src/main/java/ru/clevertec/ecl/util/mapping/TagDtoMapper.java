@@ -13,6 +13,5 @@ public interface TagDtoMapper {
     TagDto mapToDto(Tag dto);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "giftCertificates", ignore = true)
     Tag mapCreationDtoToEntity(TagRequestDto tagRequestDto);
 }

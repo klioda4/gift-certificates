@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.service.impl;
 
+import com.cosium.spring.data.jpa.entity.graph.domain2.NamedEntityGraph;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,19 +8,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreationDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
 import ru.clevertec.ecl.exception.ObjectNotFoundException;
 import ru.clevertec.ecl.model.GiftCertificate;
+import ru.clevertec.ecl.model.GiftCertificate_;
 import ru.clevertec.ecl.model.Tag;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
+import ru.clevertec.ecl.repository.specification.GiftCertificateSpecifications;
 import ru.clevertec.ecl.service.GiftCertificateService;
 import ru.clevertec.ecl.service.TagService;
 import ru.clevertec.ecl.util.mapping.GiftCertificateDtoMapper;
@@ -28,32 +29,34 @@ import ru.clevertec.ecl.util.mapping.GiftCertificateDtoMapper;
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    private static final String NAME_FIELD = "name";
-    private static final String DESCRIPTION_FIELD = "description";
-    private static final String TAGS_FIELD = "tags";
+    private static final String CERTIFICATE_WITH_TAGS_ENTITY_GRAPH = "certificate-with-tags";
 
     private final GiftCertificateRepository repository;
     private final GiftCertificateDtoMapper mapper;
     private final TagService tagService;
 
     @Override
-//    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Page<GiftCertificate> findByFilters(Pageable pageable, GiftCertificateFilterDto filterDto) {
-        ExampleMatcher filtersMatcher = ExampleMatcher.matchingAll()
-            .withMatcher(NAME_FIELD, GenericPropertyMatchers.contains().ignoreCase())
-            .withMatcher(DESCRIPTION_FIELD, GenericPropertyMatchers.contains().ignoreCase());
-        GiftCertificate certificateSample = GiftCertificate.builder()
-            .name(filterDto.getNameSample())
-            .description(filterDto.getDescriptionSample())
-            .build();
-        Example<GiftCertificate> filterExample = Example.of(certificateSample, filtersMatcher);
-        return repository.findAll(filterExample, pageable);
+        Specification<GiftCertificate> isNameLikeSample = GiftCertificateSpecifications
+            .isNameLikeOptional(filterDto.getNameSample());
+        Specification<GiftCertificate> isDescriptionLikeSample = GiftCertificateSpecifications
+            .isDescriptionLikeOptional(filterDto.getDescriptionSample());
+        Specification<GiftCertificate> isTagPresent = GiftCertificateSpecifications
+            .isTagPresentOptional(filterDto.getTagName());
+
+        return repository.findAll(
+            Specification.where(isNameLikeSample
+                .and(isDescriptionLikeSample)
+                .and(isTagPresent)),
+            pageable,
+            NamedEntityGraph.fetching(CERTIFICATE_WITH_TAGS_ENTITY_GRAPH));
     }
 
     @Override
-//    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public GiftCertificate findById(long id) throws ObjectNotFoundException {
-        return repository.findById(id)
+        return repository.findById(id, NamedEntityGraph.fetching(CERTIFICATE_WITH_TAGS_ENTITY_GRAPH))
             .orElseThrow(() -> new ObjectNotFoundException("GiftCertificate", "id", id));
     }
 
@@ -71,7 +74,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificate updateById(long id, Map<String, Object> newFieldValues) throws ObjectNotFoundException {
-        GiftCertificate giftCertificate = findById(id);
+        GiftCertificate giftCertificate = repository.findById(id)
+            .orElseThrow(() -> new ObjectNotFoundException("GiftCertificate", "id", id));
         replaceTagNamesWithLoadedTagsIfExist(newFieldValues);
         populateFields(giftCertificate, newFieldValues);
         return repository.save(giftCertificate);
@@ -104,14 +108,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void replaceTagNamesWithLoadedTagsIfExist(Map<String, Object> fieldValues) {
         // TODO: replace with better solution
-        Object tagsNewValue = fieldValues.get(TAGS_FIELD);
+        Object tagsNewValue = fieldValues.get(GiftCertificate_.TAGS);
         if (tagsNewValue == null) {
             return;
         }
         try {
             List<String> tags = (List<String>) tagsNewValue;
             List<Tag> loadedTags = findOrCreateAll(tags);
-            fieldValues.put(TAGS_FIELD, loadedTags);
+            fieldValues.put(GiftCertificate_.TAGS, loadedTags);
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("Incorrect value for field \"tags\"", e);
         }

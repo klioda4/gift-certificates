@@ -1,8 +1,10 @@
 package ru.clevertec.ecl.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaRepository;
+import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaSpecificationExecutor;
 import ru.clevertec.ecl.model.GiftCertificate;
 
-public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long> {
+public interface GiftCertificateRepository extends EntityGraphJpaRepository<GiftCertificate, Long>,
+    EntityGraphJpaSpecificationExecutor<GiftCertificate> {
 
 }

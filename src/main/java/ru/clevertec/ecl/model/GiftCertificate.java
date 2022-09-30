@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "gift_certificates")
+@NamedEntityGraph(
+    name = "certificate-with-tags",
+    attributeNodes = @NamedAttributeNode("tags"))
 public class GiftCertificate {
 
     @Id
