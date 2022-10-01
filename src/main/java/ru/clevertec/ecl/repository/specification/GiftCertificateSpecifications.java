@@ -10,6 +10,8 @@ import ru.clevertec.ecl.model.Tag_;
 @UtilityClass
 public class GiftCertificateSpecifications {
 
+    private static final String FILTER_EXPRESSION = "%%%s%%";
+
     public Specification<GiftCertificate> isTagPresentOptional(String tagName) {
         return (root, query, criteriaBuilder) -> {
             if (tagName == null) {
@@ -27,7 +29,7 @@ public class GiftCertificateSpecifications {
                 ? null
                 : criteriaBuilder.like(
                     criteriaBuilder.lower(root.get(GiftCertificate_.name)),
-                    String.format("%%%s%%", nameSample.toLowerCase()));
+                    String.format(FILTER_EXPRESSION, nameSample.toLowerCase()));
     }
 
     public Specification<GiftCertificate> isDescriptionLikeOptional(String descriptionSample) {
@@ -36,6 +38,6 @@ public class GiftCertificateSpecifications {
                 ? null
                 : criteriaBuilder.like(
                     criteriaBuilder.lower(root.get(GiftCertificate_.description)),
-                    String.format("%%%s%%", descriptionSample.toLowerCase()));
+                    String.format(FILTER_EXPRESSION, descriptionSample.toLowerCase()));
     }
 }

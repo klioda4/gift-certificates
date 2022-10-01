@@ -41,6 +41,8 @@ public class GiftCertificate {
     private BigDecimal price;
     private Integer duration;
     private LocalDateTime createDate;
+
+    @EqualsAndHashCode.Exclude
     private LocalDateTime lastUpdateDate;
 
     @ToString.Exclude

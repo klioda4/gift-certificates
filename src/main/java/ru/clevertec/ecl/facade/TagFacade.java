@@ -1,10 +1,9 @@
 package ru.clevertec.ecl.facade;
 
-import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.dto.TagDto;
-import ru.clevertec.ecl.dto.request.TagRequestDto;
+import ru.clevertec.ecl.dto.request.TagPutDto;
 
 public interface TagFacade {
 
@@ -12,9 +11,9 @@ public interface TagFacade {
 
     TagDto findById(long id);
 
-    TagDto create(TagRequestDto createDto);
+    TagDto create(TagPutDto newTagDto);
 
-    TagDto updateById(long id, Map<String, Object> newFieldValues);
+    TagDto replaceById(long id, TagPutDto newTagDto);
 
     void deleteById(long id);
 }

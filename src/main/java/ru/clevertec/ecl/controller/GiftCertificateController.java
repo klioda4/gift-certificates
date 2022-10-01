@@ -1,6 +1,5 @@
 package ru.clevertec.ecl.controller;
 
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.ecl.dto.GiftCertificateDto;
-import ru.clevertec.ecl.dto.request.GiftCertificateCreationDto;
+import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
+import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.facade.GiftCertificateFacade;
 
 @Slf4j
@@ -29,10 +29,10 @@ public class GiftCertificateController {
     private final GiftCertificateFacade facade;
 
     @GetMapping
-    public Page<GiftCertificateDto> findByFilter(Pageable pageable, GiftCertificateFilterDto filterDto) {
+    public Page<GiftCertificateDto> findAllByFilter(Pageable pageable, GiftCertificateFilterDto filterDto) {
         log.info("GET request to /api/v1/gift-certificates with params: pageable = {}, filterDto = {}", pageable,
             filterDto);
-        return facade.findByFilter(pageable, filterDto);
+        return facade.findAllByFilter(pageable, filterDto);
     }
 
     @GetMapping("/{id}")
@@ -42,13 +42,13 @@ public class GiftCertificateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto create(@RequestBody GiftCertificateCreationDto newItem) {
+    public GiftCertificateDto create(@RequestBody GiftCertificateCreateDto newItem) {
         return facade.create(newItem);
     }
 
     @PatchMapping("/{id}")
-    public GiftCertificateDto updateById(@PathVariable long id, @RequestBody Map<String, Object> newFieldValues) {
-        return facade.updateById(id, newFieldValues);
+    public GiftCertificateDto updateById(@PathVariable long id, @RequestBody GiftCertificateUpdateDto updateDto) {
+        return facade.updateById(id, updateDto);
     }
 
     @DeleteMapping("/{id}")

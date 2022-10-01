@@ -20,7 +20,7 @@ public class GiftCertificateDto {
     private String name;
     private String description;
     private BigDecimal price;
-    private int duration;
+    private Integer duration;
 
     @JsonSerialize(using = LocalDateTimeJsonSerializer.class)
     private LocalDateTime createDate;

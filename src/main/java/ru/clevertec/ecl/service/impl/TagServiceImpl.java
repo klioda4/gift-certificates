@@ -1,14 +1,11 @@
 package ru.clevertec.ecl.service.impl;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.ecl.dto.request.TagRequestDto;
+import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.exception.ObjectNotFoundException;
 import ru.clevertec.ecl.model.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
@@ -31,22 +28,22 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional(readOnly = true)
     public Tag findById(long id) throws ObjectNotFoundException {
-        return repository.findById(id)
-            .orElseThrow(() -> new ObjectNotFoundException("Tag", "id", id));
+        return findByIdOrThrow(id);
     }
 
     @Override
-    public Tag create(TagRequestDto createDto) {
-        Tag newTag = mapper.mapCreationDtoToEntity(createDto);
+    public Tag create(TagPutDto createDto) {
+        Tag newTag = mapper.mapPutDtoToEntity(createDto);
         return repository.save(newTag);
     }
 
     @Override
     @Transactional
-    public Tag updateById(long id, Map<String, Object> newFieldValues) {
-        Tag tagToUpdate = findById(id);
-        populateFields(tagToUpdate, newFieldValues);
-        return repository.save(tagToUpdate);
+    public Tag replaceById(long id, TagPutDto putDto) throws ObjectNotFoundException {
+        findByIdOrThrow(id);
+        Tag tagToPut = mapper.mapPutDtoToEntity(putDto);
+        tagToPut.setId(id);
+        return repository.save(tagToPut);
     }
 
     @Override
@@ -63,17 +60,14 @@ public class TagServiceImpl implements TagService {
             .orElseGet(() -> saveByName(name));
     }
 
-    private <T> void populateFields(T entity, Map<String, Object> newFieldValues) {
-        try {
-            BeanUtils.populate(entity, newFieldValues);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalArgumentException("Incorrect field name or value was passed to update", e);
-        }
-    }
-
     private Tag saveByName(String name) {
         return repository.save(Tag.builder()
             .name(name)
             .build());
+    }
+
+    private Tag findByIdOrThrow(long id) throws ObjectNotFoundException {
+        return repository.findById(id)
+            .orElseThrow(() -> new ObjectNotFoundException("Tag", "id", id));
     }
 }

@@ -1,14 +1,13 @@
-package ru.clevertec.ecl.dto;
+package ru.clevertec.ecl.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class TagDto {
+@NoArgsConstructor
+public class TagPutDto {
 
-    private long id;
     private String name;
 }

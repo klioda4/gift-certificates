@@ -1,15 +1,7 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/gift-certificate-db
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+  profiles:
+    active: "local"
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL10Dialect
-        show_sql: true
-        format_sql: true
     hibernate:
       ddl-auto: validate
   mvc:

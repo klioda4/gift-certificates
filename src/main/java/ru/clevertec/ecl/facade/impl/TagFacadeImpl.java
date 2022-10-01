@@ -1,12 +1,11 @@
 package ru.clevertec.ecl.facade.impl;
 
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.clevertec.ecl.dto.TagDto;
-import ru.clevertec.ecl.dto.request.TagRequestDto;
+import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.facade.TagFacade;
 import ru.clevertec.ecl.service.TagService;
 import ru.clevertec.ecl.util.mapping.TagDtoMapper;
@@ -31,15 +30,15 @@ public class TagFacadeImpl implements TagFacade {
     }
 
     @Override
-    public TagDto create(TagRequestDto createDto) {
+    public TagDto create(TagPutDto newTagDto) {
         return mapper.mapToDto(
-            service.create(createDto));
+            service.create(newTagDto));
     }
 
     @Override
-    public TagDto updateById(long id, Map<String, Object> newFieldValues) {
+    public TagDto replaceById(long id, TagPutDto newTagDto) {
         return mapper.mapToDto(
-            service.updateById(id, newFieldValues));
+            service.replaceById(id, newTagDto));
     }
 
     @Override
