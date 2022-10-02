@@ -14,6 +14,7 @@ import static ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier.getGi
 import static ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier.getGiftCertificateMappedFromCreateDto;
 import static ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier.getGiftCertificateMergedWithUpdateDto;
 import static ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier.getGiftCertificateUpdateDto;
+import static ru.clevertec.ecl.test.supply.TagTestDataSupplier.getTag;
 
 import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph;
 import com.cosium.spring.data.jpa.entity.graph.domain2.NamedEntityGraph;
@@ -75,7 +76,7 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void givenId_whenFindById_thenReturnCorrectGiftCertificate() {
-        long givenId = 1L;
+        long givenId = 1;
         when(
             repository.findById(
                 eq(givenId),
@@ -91,7 +92,7 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void givenNotExistingId_whenFindById_thenThrowObjectNotFoundException() {
-        long givenIncorrectId = 1L;
+        long givenIncorrectId = 1;
         when(
             repository.findById(
                 eq(givenIncorrectId),
@@ -119,17 +120,17 @@ class GiftCertificateServiceImplTest {
     @Test
     void givenCreateDtoWithTags_whenCreate_thenReturnGiftCertificateWithCorrectTags() {
         GiftCertificateCreateDto givenCreateDto = GiftCertificateCreateDto.builder()
-            .tagNames(Arrays.asList("tag1"))
+            .tagNames(Arrays.asList("default-tag"))
             .build();
         stubSaveOfRepository();
         when(mapper.mapCreationDtoToEntity(givenCreateDto))
             .thenReturn(new GiftCertificate());
-        when(tagService.findOrCreateByName("tag1"))
-            .thenReturn(new Tag(1L, "tag1"));
+        when(tagService.findOrCreateByName("default-tag"))
+            .thenReturn(getTag());
 
         GiftCertificate actual = service.create(givenCreateDto);
 
-        List<Tag> expectedList = Arrays.asList(new Tag(1L, "tag1"));
+        List<Tag> expectedList = Arrays.asList(getTag());
         assertNotNull(actual.getTags(), "tags field needs to not be null");
         assertEquals(expectedList, actual.getTags(), "tags field was not mapped correctly");
     }
@@ -137,10 +138,7 @@ class GiftCertificateServiceImplTest {
     @Test
     void givenIdAndUpdateDto_whenUpdateById_thenUpdateOnlySpecifiedFields() {
         long givenId = 1;
-        GiftCertificateUpdateDto givenUpdateDto = GiftCertificateUpdateDto.builder()
-            .name("new_name")
-            .duration(55)
-            .build();
+        GiftCertificateUpdateDto givenUpdateDto = getGiftCertificateUpdateDto();
         stubFindByIdOfRepository(givenId);
         stubSaveOfRepository();
         stubPartialUpdateOfMapper();
@@ -155,22 +153,18 @@ class GiftCertificateServiceImplTest {
     void givenIdAndUpdateDtoWithTagNames_whenUpdateById_thenUpdateTagsInGiftCertificate() {
         long givenId = 1;
         GiftCertificateUpdateDto givenUpdateDto = GiftCertificateUpdateDto.builder()
-            .tagNames(Arrays.asList("tag1", "tag2"))
+            .tagNames(Arrays.asList("default-tag"))
             .build();
         when(repository.findById(givenId))
             .thenReturn(Optional.of(getGiftCertificate()));
         when(repository.save(any()))
             .then(returnsFirstArg());
-        when(tagService.findOrCreateByName("tag1"))
-            .thenReturn(new Tag(1L, "tag1"));
-        when(tagService.findOrCreateByName("tag2"))
-            .thenReturn(new Tag(2L, "tag2"));
+        when(tagService.findOrCreateByName("default-tag"))
+            .thenReturn(getTag());
 
         GiftCertificate resultCertificate = service.updateById(givenId, givenUpdateDto);
 
-        List<Tag> expectedTags = Arrays.asList(
-            new Tag(1L, "tag1"),
-            new Tag(2L, "tag2"));
+        List<Tag> expectedTags = Arrays.asList(getTag());
         assertEquals(expectedTags, resultCertificate.getTags(), "Tags field was updated incorrectly");
     }
 

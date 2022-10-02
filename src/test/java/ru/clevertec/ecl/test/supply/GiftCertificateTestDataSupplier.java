@@ -10,37 +10,44 @@ import ru.clevertec.ecl.model.GiftCertificate;
 
 public class GiftCertificateTestDataSupplier {
 
+    public static final long DEFAULT_ID = 1L;
+    public static final String DEFAULT_NAME = "cert";
+    public static final String DEFAULT_DESCRIPTION = "description";
+    public static final BigDecimal DEFAULT_PRICE = BigDecimal.valueOf(5L);
+    public static final int DEFAULT_DURATION = 30;
+    public static final LocalDateTime DEFAULT_DATE = LocalDateTime.of(2050, 1, 1, 0, 0);
+
     public static GiftCertificate getGiftCertificate() {
         return GiftCertificate.builder()
-            .id(1L)
-            .name("cert")
-            .description("description")
-            .price(BigDecimal.valueOf(5L))
-            .duration(30)
-            .createDate(LocalDateTime.of(2050, 1, 1, 0, 0))
-            .lastUpdateDate(LocalDateTime.of(2050, 1, 1, 0, 0))
+            .id(DEFAULT_ID)
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .price(DEFAULT_PRICE)
+            .duration(DEFAULT_DURATION)
+            .createDate(DEFAULT_DATE)
+            .lastUpdateDate(DEFAULT_DATE)
             .build();
     }
 
     public static GiftCertificateDto getGiftCertificateDto() {
         return GiftCertificateDto.builder()
-            .id(1L)
-            .name("cert")
-            .description("description")
-            .price(BigDecimal.valueOf(5L))
-            .duration(30)
-            .createDate(LocalDateTime.of(2050, 1, 1, 0, 0))
-            .lastUpdateDate(LocalDateTime.of(2050, 1, 1, 0, 0))
+            .id(DEFAULT_ID)
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .price(DEFAULT_PRICE)
+            .duration(DEFAULT_DURATION)
+            .createDate(DEFAULT_DATE)
+            .lastUpdateDate(DEFAULT_DATE)
             .tags(Collections.emptyList())
             .build();
     }
 
     public static GiftCertificateCreateDto getGiftCertificateCreateDto() {
         return GiftCertificateCreateDto.builder()
-            .name("cert")
-            .description("description")
-            .price(BigDecimal.valueOf(5L))
-            .duration(30)
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .price(DEFAULT_PRICE)
+            .duration(DEFAULT_DURATION)
             .tagNames(Collections.emptyList())
             .build();
     }
@@ -54,28 +61,24 @@ public class GiftCertificateTestDataSupplier {
 
     public static GiftCertificate getGiftCertificateMappedFromCreateDto() {
         return GiftCertificate.builder()
-            .name("cert")
-            .description("description")
-            .price(BigDecimal.valueOf(5L))
-            .duration(30)
-            .createDate(LocalDateTime.of(2050, 1, 1, 0, 0))
-            .lastUpdateDate(LocalDateTime.of(2050, 1, 1, 0, 0))
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .price(DEFAULT_PRICE)
+            .duration(DEFAULT_DURATION)
+            .createDate(DEFAULT_DATE)
+            .lastUpdateDate(DEFAULT_DATE)
             .build();
     }
 
     public static GiftCertificate getGiftCertificateMergedWithUpdateDto() {
         return GiftCertificate.builder()
-            .id(1L)
             .name("new_name")
-            .description("description")
-            .price(BigDecimal.valueOf(5L))
             .duration(55)
-            .createDate(LocalDateTime.of(2050, 1, 1, 0, 0))
-            .lastUpdateDate(LocalDateTime.of(2050, 1, 1, 0, 0))
+            .id(DEFAULT_ID)
+            .description(DEFAULT_DESCRIPTION)
+            .price(DEFAULT_PRICE)
+            .createDate(DEFAULT_DATE)
+            .lastUpdateDate(DEFAULT_DATE)
             .build();
-    }
-
-    public static LocalDateTime getDefaultCreateDate() {
-        return LocalDateTime.of(2050, 1, 1, 0, 0);
     }
 }

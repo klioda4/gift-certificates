@@ -3,7 +3,6 @@ package ru.clevertec.ecl.util.mapping;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier.getDefaultCreateDate;
 import static ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier.getGiftCertificate;
 import static ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier.getGiftCertificateCreateDto;
 import static ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier.getGiftCertificateDto;
@@ -19,6 +18,7 @@ import ru.clevertec.ecl.dto.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.model.GiftCertificate;
+import ru.clevertec.ecl.test.supply.GiftCertificateTestDataSupplier;
 
 class GiftCertificateDtoMapperTest {
 
@@ -79,7 +79,7 @@ class GiftCertificateDtoMapperTest {
     @Test
     void givenUpdateDtoAndGiftCertificate_whenUpdateEntityIgnoreTags_thenSetLastUpdateDate() {
         GiftCertificateCreateDto givenCreateDto = getGiftCertificateCreateDto();
-        LocalDateTime defaultDate = getDefaultCreateDate();
+        LocalDateTime defaultDate = GiftCertificateTestDataSupplier.DEFAULT_DATE;
 
         GiftCertificate result = mapper.mapCreationDtoToEntity(givenCreateDto);
 

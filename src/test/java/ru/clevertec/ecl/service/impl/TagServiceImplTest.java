@@ -6,6 +6,9 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ru.clevertec.ecl.test.supply.TagTestDataSupplier.getTag;
+import static ru.clevertec.ecl.test.supply.TagTestDataSupplier.getTagMappedFromPutDto;
+import static ru.clevertec.ecl.test.supply.TagTestDataSupplier.getTagPutDto;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -39,9 +42,7 @@ class TagServiceImplTest {
     void givenPageable_whenFindAll_thenReturnCorrectTagPage() {
         Pageable givenPageable = Pageable.ofSize(20);
         Page<Tag> givenResult = new PageImpl<>(
-            Arrays.asList(
-                getTag(1L),
-                getTag(2L)));
+            Arrays.asList(getTag()));
         when(repository.findAll(any(Pageable.class)))
             .thenReturn(givenResult);
 
@@ -52,18 +53,18 @@ class TagServiceImplTest {
 
     @Test
     void givenId_whenFindById_thenReturnCorrectTag() {
-        long givenId = 1L;
-        stubFindByIdOfRepository(givenId);
+        long givenId = 1;
+        stubFindByIdOfRepository();
 
         Tag actual = service.findById(givenId);
 
-        Tag expected = getTag(1L);
+        Tag expected = getTag();
         assertEquals(expected, actual);
     }
 
     @Test
     void givenNotExistingId_whenFindById_thenThrowObjectNotFoundException() {
-        long givenIncorrectId = 1L;
+        long givenIncorrectId = 1;
         when(repository.findById(givenIncorrectId))
             .thenReturn(Optional.empty());
 
@@ -73,54 +74,53 @@ class TagServiceImplTest {
 
     @Test
     void givenPutDto_whenCreate_thenSaveAndReturnCorrectTag() {
-        TagPutDto givenPutDto = new TagPutDto("tag1");
+        TagPutDto givenPutDto = getTagPutDto();
         when(mapper.mapPutDtoToEntity(givenPutDto))
-            .thenReturn(new Tag(0, "tag1"));
-        when(repository.save(new Tag(0, "tag1")))
-            .thenReturn(getTag(1L));
+            .thenReturn(getTagMappedFromPutDto());
+        when(repository.save(getTagMappedFromPutDto()))
+            .thenReturn(getTag());
 
         Tag actual = service.create(givenPutDto);
 
-        Tag expected = getTag(1L);
+        Tag expected = getTag();
         assertEquals(expected, actual);
     }
 
     @Test
     void givenIdAndPutDto_whenReplaceById_thenSaveAndReturnCorrectTag() {
-        long givenId = 1L;
-        TagPutDto givenPutDto = new TagPutDto("tag1");
-        stubFindByIdOfRepository(givenId);
+        long givenId = 1;
+        TagPutDto givenPutDto = getTagPutDto();
+        stubFindByIdOfRepository();
         stubSaveOfRepository();
         when(mapper.mapPutDtoToEntity(givenPutDto))
-            .thenReturn(new Tag(0, "tag1"));
+            .thenReturn(getTagMappedFromPutDto());
 
         Tag actual = service.replaceById(givenId, givenPutDto);
 
-        Tag expected = getTag(givenId);
+        Tag expected = getTag();
         assertEquals(expected, actual);
     }
 
     @Test
     void givenId_whenDeleteById_thenCallRepositoryDelete() {
-        long givenId = 1L;
-        stubFindByIdOfRepository(givenId);
+        long givenId = 1;
+        stubFindByIdOfRepository();
 
         service.deleteById(givenId);
 
         verify(repository)
-            .delete(getTag(givenId));
+            .delete(getTag());
     }
 
     @Test
     void givenExistingTagName_whenFindOrCreateByName_thenReturnCorrectTag() {
-        String givenTagName = "tag1";
+        String givenTagName = "default-tag";
         when(repository.findByName(givenTagName))
-            .thenReturn(Optional.of(
-                new Tag(1L, "tag1")));
+            .thenReturn(Optional.of(getTag()));
 
         Tag actual = service.findOrCreateByName(givenTagName);
 
-        Tag expected = new Tag(1L, "tag1");
+        Tag expected = getTag();
         assertEquals(expected, actual);
     }
 
@@ -129,23 +129,19 @@ class TagServiceImplTest {
         String givenNewTagName = "new-tag";
         when(repository.findByName(givenNewTagName))
             .thenReturn(Optional.empty());
-        when(repository.save(new Tag(0L, "new-tag")))
-            .thenReturn(new Tag(1L, "new-tag"));
+        when(repository.save(new Tag(0, "new-tag")))
+            .thenReturn(new Tag(1, "new-tag"));
 
         Tag actual = service.findOrCreateByName(givenNewTagName);
 
-        Tag expected = new Tag(1L, "new-tag");
+        Tag expected = new Tag(1, "new-tag");
         assertEquals(expected, actual);
     }
 
-    private Tag getTag(long id) {
-        return new Tag(id, "tag" + id);
-    }
-
-    private void stubFindByIdOfRepository(long id) {
-        when(repository.findById(id))
+    private void stubFindByIdOfRepository() {
+        when(repository.findById(1L))
             .thenReturn(Optional.of(
-                getTag(id)));
+                getTag()));
     }
 
     private void stubSaveOfRepository() {
