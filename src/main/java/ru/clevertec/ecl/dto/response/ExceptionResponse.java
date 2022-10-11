@@ -1,13 +1,10 @@
 package ru.clevertec.ecl.dto.response;
 
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExceptionResponse {
 
     int status;

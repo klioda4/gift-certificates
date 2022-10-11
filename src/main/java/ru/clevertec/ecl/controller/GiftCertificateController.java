@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -42,7 +43,7 @@ public class GiftCertificateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto create(@RequestBody GiftCertificateCreateDto newItem) {
+    public GiftCertificateDto create(@Valid @RequestBody GiftCertificateCreateDto newItem) {
         return facade.create(newItem);
     }
 

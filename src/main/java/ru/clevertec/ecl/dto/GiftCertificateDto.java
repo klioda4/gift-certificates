@@ -3,14 +3,11 @@ package ru.clevertec.ecl.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GiftCertificateDto {
 
     Long id;

@@ -2,19 +2,24 @@ package ru.clevertec.ecl.dto.request;
 
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.AccessLevel;
+import javax.validation.constraints.NotBlank;
 import lombok.Builder;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Value;
+import ru.clevertec.ecl.util.validate.constraint.NotBlankOrNull;
 
-@Data
+@Value
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GiftCertificateUpdateDto {
 
+    @NotBlankOrNull
     String name;
+
+    @NotBlankOrNull
     String description;
+
     BigDecimal price;
+
     Integer duration;
-    List<String> tagNames;
+
+    List<@NotBlank String> tagNames;
 }

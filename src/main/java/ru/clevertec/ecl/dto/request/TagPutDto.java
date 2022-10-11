@@ -1,14 +1,11 @@
 package ru.clevertec.ecl.dto.request;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import javax.validation.constraints.NotBlank;
+import lombok.Value;
 
-@Data
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Value
 public class TagPutDto {
 
+    @NotBlank
     String name;
 }
