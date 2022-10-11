@@ -21,7 +21,7 @@ import ru.clevertec.ecl.facade.TagFacade;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/tags")
+@RequestMapping("/v1/tags")
 public class TagController {
 
     private final TagFacade facade;
@@ -44,8 +44,9 @@ public class TagController {
     }
 
     @PutMapping("/{id}")
-    public TagDto replaceById(@PathVariable long id, @RequestBody TagPutDto newTag) {
-        return facade.replaceById(id, newTag);
+    public TagDto updateById(@PathVariable long id,
+                             @RequestBody TagPutDto putDto) {
+        return facade.updateById(id, putDto);
     }
 
     @DeleteMapping("/{id}")

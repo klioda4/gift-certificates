@@ -13,23 +13,21 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
-@Table(name = "gift_certificates")
 @NamedEntityGraph(
     name = "certificate-with-tags",
-    attributeNodes = @NamedAttributeNode("tags"))
+    attributeNodes = @NamedAttributeNode(GiftCertificate_.TAGS))
 public class GiftCertificate {
 
     @Id
@@ -50,6 +48,7 @@ public class GiftCertificate {
     @Builder.Default
     @ManyToMany
     @JoinTable(
+        name = "gift_certificate_tag",
         joinColumns = @JoinColumn(name = "gift_certificate_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags = new ArrayList<>();

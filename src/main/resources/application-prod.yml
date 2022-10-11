@@ -8,3 +8,5 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-main.yml

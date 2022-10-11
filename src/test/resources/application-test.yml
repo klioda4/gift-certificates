@@ -4,3 +4,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  liquibase:
+    change-log: /db/changelog/db.changelog-test.yml

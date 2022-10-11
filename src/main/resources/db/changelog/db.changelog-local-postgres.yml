@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/db/changelog/updates/create-schema-changelog.sql
+  - include:
+      file: classpath:/db/query/fill-tables.sql
+  - include:
+      file: classpath:/db/query/update-postgres-sequences.sql

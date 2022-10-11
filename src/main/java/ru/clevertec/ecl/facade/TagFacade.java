@@ -13,7 +13,7 @@ public interface TagFacade {
 
     TagDto create(TagPutDto newTagDto);
 
-    TagDto replaceById(long id, TagPutDto newTagDto);
+    TagDto updateById(long id, TagPutDto putDto);
 
     void deleteById(long id);
 }

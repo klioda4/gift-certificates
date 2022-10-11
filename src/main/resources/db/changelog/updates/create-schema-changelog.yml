@@ -1,0 +1,97 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: klioda4
+      changes:
+        - createTable:
+            tableName: tags
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - createTable:
+            tableName: gift_certificates
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: price
+                  type: decimal(7, 2)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: duration
+                  type: integer
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: create_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: last_update_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: gift_certificates_tags
+            columns:
+              - column:
+                  name: gift_certificate_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: gift_certificates_tags_gift_certificates_fkey
+                    references: gift_certificates(id)
+
+              - column:
+                  name: tag_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: gift_certificates_tags_tags_fkey
+                    references: tags(id)
+
+        - sql:
+            sql:
+              ALTER TABLE gift_certificates
+              ADD CONSTRAINT gift_certificates_price_check    CHECK (price >= 0);
+              ALTER TABLE gift_certificates
+              ADD CONSTRAINT gift_certificates_duration_check CHECK (duration >= 0);

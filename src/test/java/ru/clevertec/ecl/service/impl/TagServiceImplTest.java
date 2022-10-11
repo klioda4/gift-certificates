@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.dto.request.TagPutDto;
-import ru.clevertec.ecl.exception.ObjectNotFoundException;
+import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.model.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
 import ru.clevertec.ecl.util.mapping.TagDtoMapper;
@@ -68,7 +68,7 @@ class TagServiceImplTest {
         when(repository.findById(givenIncorrectId))
             .thenReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class,
+        assertThrows(EntityNotFoundException.class,
             () -> service.findById(givenIncorrectId));
     }
 
@@ -95,7 +95,7 @@ class TagServiceImplTest {
         when(mapper.mapPutDtoToEntity(givenPutDto))
             .thenReturn(getTagMappedFromPutDto());
 
-        Tag actual = service.replaceById(givenId, givenPutDto);
+        Tag actual = service.updateById(givenId, givenPutDto);
 
         Tag expected = getTag();
         assertEquals(expected, actual);
@@ -129,12 +129,12 @@ class TagServiceImplTest {
         String givenNewTagName = "new-tag";
         when(repository.findByName(givenNewTagName))
             .thenReturn(Optional.empty());
-        when(repository.save(new Tag(0, "new-tag")))
-            .thenReturn(new Tag(1, "new-tag"));
+        when(repository.save(new Tag(0L, "new-tag")))
+            .thenReturn(new Tag(1L, "new-tag"));
 
         Tag actual = service.findOrCreateByName(givenNewTagName);
 
-        Tag expected = new Tag(1, "new-tag");
+        Tag expected = new Tag(1L, "new-tag");
         assertEquals(expected, actual);
     }
 

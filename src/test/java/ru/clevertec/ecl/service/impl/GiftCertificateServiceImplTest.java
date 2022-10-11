@@ -34,7 +34,7 @@ import org.springframework.data.jpa.domain.Specification;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
-import ru.clevertec.ecl.exception.ObjectNotFoundException;
+import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.model.GiftCertificate;
 import ru.clevertec.ecl.model.Tag;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
@@ -57,9 +57,9 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateDtoMapper mapper;
 
     @Test
-    void givenPageable_whenFindAllByFilters_thenReturnCorrectGiftCertificatePage() {
+    void givenPageableAndNoFilters_whenFindAllByFilters_thenReturnCorrectGiftCertificatePage() {
         Pageable givenPageable = Pageable.ofSize(20);
-        GiftCertificateFilterDto givenFilterDto = new GiftCertificateFilterDto();
+        GiftCertificateFilterDto givenFilterDto = GiftCertificateFilterDto.builder().build();
         Page<GiftCertificate> givenResult = new PageImpl<>(
             Collections.singletonList(getGiftCertificate()));
         when(
@@ -99,7 +99,7 @@ class GiftCertificateServiceImplTest {
                 any(EntityGraph.class)))
             .thenReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class,
+        assertThrows(EntityNotFoundException.class,
             () -> service.findById(givenIncorrectId));
     }
 
@@ -192,13 +192,13 @@ class GiftCertificateServiceImplTest {
 
     private void stubPartialUpdateOfMapper() {
         doAnswer(invocation -> {
-            GiftCertificate certificateForUpdate = invocation.getArgument(1);
+            GiftCertificate certificateForUpdate = invocation.getArgument(0);
             certificateForUpdate.setName("new_name");
             certificateForUpdate.setDuration(55);
             return null;
         })
             .when(mapper).updateEntityIgnoringTags(
-                eq(getGiftCertificateUpdateDto()),
-                any(GiftCertificate.class));
+                any(GiftCertificate.class),
+                eq(getGiftCertificateUpdateDto()));
     }
 }

@@ -10,3 +10,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         show_sql: true
         format_sql: true
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-local-postgres.yml

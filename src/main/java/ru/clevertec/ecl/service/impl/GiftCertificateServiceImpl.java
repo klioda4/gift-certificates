@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
-import ru.clevertec.ecl.exception.ObjectNotFoundException;
+import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.model.GiftCertificate;
 import ru.clevertec.ecl.model.Tag;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
@@ -23,6 +23,7 @@ import ru.clevertec.ecl.util.mapping.GiftCertificateDtoMapper;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private static final String CERTIFICATE_WITH_TAGS_ENTITY_GRAPH = "certificate-with-tags";
@@ -51,43 +52,43 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public GiftCertificate findById(long id) throws ObjectNotFoundException {
+    public GiftCertificate findById(long id) {
         return repository.findById(id, NamedEntityGraph.fetching(CERTIFICATE_WITH_TAGS_ENTITY_GRAPH))
-            .orElseThrow(() -> new ObjectNotFoundException("GiftCertificate", "id", id));
+            .orElseThrow(() -> new EntityNotFoundException("GiftCertificate", "id", id));
     }
 
     @Override
     @Transactional
     public GiftCertificate create(GiftCertificateCreateDto creationDto) {
         GiftCertificate newCertificate = mapper.mapCreationDtoToEntity(creationDto);
-        List<String> tags = creationDto.getTagNames();
-        List<Tag> loadedTags = findOrCreateTags(tags);
+        List<String> tagNames = creationDto.getTagNames();
+        List<Tag> loadedTags = findOrCreateTags(tagNames);
         newCertificate.setTags(loadedTags);
         return repository.save(newCertificate);
     }
 
     @Override
     @Transactional
-    public GiftCertificate updateById(long id, GiftCertificateUpdateDto updateDto) throws ObjectNotFoundException {
-        GiftCertificate giftCertificate = findByIdOrThrow(id);
-        mapper.updateEntityIgnoringTags(updateDto, giftCertificate);
+    public GiftCertificate updateById(long id, GiftCertificateUpdateDto updateDto) {
+        GiftCertificate giftCertificate = findByIdWithoutFetch(id);
+        mapper.updateEntityIgnoringTags(giftCertificate, updateDto);
         updateTagsIfPresent(giftCertificate, updateDto.getTagNames());
         return repository.save(giftCertificate);
     }
 
     @Override
     @Transactional
-    public void deleteById(long id) throws ObjectNotFoundException {
-        GiftCertificate certificate = findByIdOrThrow(id);
+    public void deleteById(long id) {
+        GiftCertificate certificate = findByIdWithoutFetch(id);
         repository.delete(certificate);
     }
 
-    private GiftCertificate findByIdOrThrow(long id) {
+    private GiftCertificate findByIdWithoutFetch(long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new ObjectNotFoundException("GiftCertificate", "id", id));
+            .orElseThrow(() -> new EntityNotFoundException("GiftCertificate", "id", id));
     }
 
-    private List<Tag> findOrCreateTags(List<String> tagNames) throws ObjectNotFoundException {
+    private List<Tag> findOrCreateTags(List<String> tagNames) {
         return tagNames.stream()
             .map(tagService::findOrCreateByName)
             .collect(Collectors.toList());

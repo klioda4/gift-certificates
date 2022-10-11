@@ -1,14 +1,15 @@
 package ru.clevertec.ecl.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TagDto {
 
-    private long id;
-    private String name;
+    Long id;
+    String name;
 }

@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.test.supply;
 
+import ru.clevertec.ecl.dto.TagDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.model.Tag;
 
@@ -12,11 +13,15 @@ public class TagTestDataSupplier {
         return new Tag(DEFAULT_ID, DEFAULT_NAME);
     }
 
+    public static TagDto getTagDto() {
+        return new TagDto(DEFAULT_ID, DEFAULT_NAME);
+    }
+
     public static TagPutDto getTagPutDto() {
         return new TagPutDto(DEFAULT_NAME);
     }
 
     public static Tag getTagMappedFromPutDto() {
-        return new Tag(0, DEFAULT_NAME);
+        return new Tag(0L, DEFAULT_NAME);
     }
 }

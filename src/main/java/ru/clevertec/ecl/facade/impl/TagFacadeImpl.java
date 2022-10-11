@@ -36,9 +36,9 @@ public class TagFacadeImpl implements TagFacade {
     }
 
     @Override
-    public TagDto replaceById(long id, TagPutDto newTagDto) {
+    public TagDto updateById(long id, TagPutDto putDto) {
         return mapper.mapToDto(
-            service.replaceById(id, newTagDto));
+            service.updateById(id, putDto));
     }
 
     @Override

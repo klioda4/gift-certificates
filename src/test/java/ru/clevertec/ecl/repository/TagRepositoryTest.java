@@ -4,20 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import ru.clevertec.ecl.model.Tag;
 
-@Sql({"classpath:db/sql/create schema.sql", "classpath:db/sql/fill tables.sql"})
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @DataJpaTest
 @ActiveProfiles("test")
 class TagRepositoryTest {
 
-    @Autowired
-    private TagRepository repository;
+    private final TagRepository repository;
 
     @Test
     void findByName() {

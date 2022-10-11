@@ -57,10 +57,10 @@ class GiftCertificateDtoMapperTest {
 
     @Test
     void givenUpdateDtoAndGiftCertificate_whenUpdateEntityIgnoreTags_thenUpdateOnlySpecifiedFields() {
-        GiftCertificateUpdateDto givenUpdateDto = getGiftCertificateUpdateDto();
         GiftCertificate giftCertificateToUpdate = getGiftCertificate();
+        GiftCertificateUpdateDto givenUpdateDto = getGiftCertificateUpdateDto();
 
-        mapper.updateEntityIgnoringTags(givenUpdateDto, giftCertificateToUpdate);
+        mapper.updateEntityIgnoringTags(giftCertificateToUpdate, givenUpdateDto);
 
         GiftCertificate expected = getGiftCertificateMergedWithUpdateDto();
         assertEquals(expected, giftCertificateToUpdate);
@@ -68,10 +68,10 @@ class GiftCertificateDtoMapperTest {
 
     @Test
     void givenUpdateDtoAndGiftCertificate_whenUpdateEntityIgnoreTags_thenNotUpdateTagList() {
-        GiftCertificateUpdateDto givenUpdateDto = getGiftCertificateUpdateDto();
         GiftCertificate giftCertificateToUpdate = getGiftCertificate();
+        GiftCertificateUpdateDto givenUpdateDto = getGiftCertificateUpdateDto();
 
-        mapper.updateEntityIgnoringTags(givenUpdateDto, giftCertificateToUpdate);
+        mapper.updateEntityIgnoringTags(giftCertificateToUpdate, givenUpdateDto);
 
         assertEquals(Collections.emptyList(), giftCertificateToUpdate.getTags(), "Tags need to stay unchanged");
     }
