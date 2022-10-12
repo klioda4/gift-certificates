@@ -43,13 +43,13 @@ public class GiftCertificateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto create(@Valid @RequestBody GiftCertificateCreateDto newItem) {
+    public GiftCertificateDto create(@RequestBody @Valid GiftCertificateCreateDto newItem) {
         return facade.create(newItem);
     }
 
     @PutMapping("/{id}")
     public GiftCertificateDto updateById(@PathVariable long id,
-                                         @RequestBody GiftCertificateUpdateDto updateDto) {
+                                         @RequestBody @Valid GiftCertificateUpdateDto updateDto) {
         return facade.updateById(id, updateDto);
     }
 
