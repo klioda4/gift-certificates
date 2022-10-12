@@ -4,12 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.dto.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
-import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 
 public interface GiftCertificateFacade {
 
-    Page<GiftCertificateDto> findAllByFilter(Pageable pageable, GiftCertificateFilterDto filterDto);
+    Page<GiftCertificateDto> findByNameAndDescription(String nameSample, String descriptionSample, Pageable pageable);
+
+    Page<GiftCertificateDto> findByTagName(String tagName, Pageable pageable);
 
     GiftCertificateDto findById(long id);
 

@@ -19,7 +19,6 @@ import static ru.clevertec.ecl.test.supply.TagTestDataSupplier.getTag;
 import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph;
 import com.cosium.spring.data.jpa.entity.graph.domain2.NamedEntityGraph;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -27,12 +26,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
-import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.model.GiftCertificate;
@@ -57,21 +55,34 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateDtoMapper mapper;
 
     @Test
-    void givenPageableAndNoFilters_whenFindAllByFilters_thenReturnCorrectGiftCertificatePage() {
+    void givenPageableAndAnyNameSample_whenFindByNameAndDescription_thenReturnCorrectPage() {
         Pageable givenPageable = Pageable.ofSize(20);
-        GiftCertificateFilterDto givenFilterDto = GiftCertificateFilterDto.builder().build();
-        Page<GiftCertificate> givenResult = new PageImpl<>(
-            Collections.singletonList(getGiftCertificate()));
+        Page<GiftCertificate> stubbedResult = new PageImpl<>(
+            Arrays.asList(getGiftCertificate()));
         when(
             repository.findAll(
-                any(Specification.class),
+                any(Example.class),
                 any(Pageable.class),
                 any(NamedEntityGraph.class)))
-            .thenReturn(givenResult);
+            .thenReturn(stubbedResult);
 
-        Page<GiftCertificate> actual = service.findAllByFilters(givenPageable, givenFilterDto);
+        Page<GiftCertificate> actual = service.findByNameAndDescription("any", null, givenPageable);
 
-        assertEquals(givenResult, actual);
+        assertEquals(stubbedResult, actual);
+    }
+
+    @Test
+    void givenPageableAndTagName_whenFindByTagName_thenReturnCorrectPage() {
+        String givenTagName = "test";
+        Pageable givenPageable = Pageable.ofSize(20);
+        Page<GiftCertificate> stubbedResult = new PageImpl<>(
+            Arrays.asList(getGiftCertificate()));
+        when(repository.findByTagName(givenTagName, givenPageable))
+            .thenReturn(stubbedResult);
+
+        Page<GiftCertificate> actual = service.findByTagName(givenTagName, givenPageable);
+
+        assertEquals(stubbedResult, actual);
     }
 
     @Test
@@ -100,7 +111,7 @@ class GiftCertificateServiceImplTest {
             .thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class,
-            () -> service.findById(givenIncorrectId));
+                     () -> service.findById(givenIncorrectId));
     }
 
     @Test

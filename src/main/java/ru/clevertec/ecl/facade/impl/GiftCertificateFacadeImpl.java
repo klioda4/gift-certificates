@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.clevertec.ecl.dto.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
-import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.facade.GiftCertificateFacade;
 import ru.clevertec.ecl.service.GiftCertificateService;
@@ -20,8 +19,15 @@ public class GiftCertificateFacadeImpl implements GiftCertificateFacade {
     private final GiftCertificateDtoMapper mapper;
 
     @Override
-    public Page<GiftCertificateDto> findAllByFilter(Pageable pageable, GiftCertificateFilterDto filterDto) {
-        return service.findAllByFilters(pageable, filterDto)
+    public Page<GiftCertificateDto> findByNameAndDescription(String nameSample, String descriptionSample,
+                                                             Pageable pageable) {
+        return service.findByNameAndDescription(nameSample, descriptionSample, pageable)
+            .map(mapper::mapToDto);
+    }
+
+    @Override
+    public Page<GiftCertificateDto> findByTagName(String tagName, Pageable pageable) {
+        return service.findByTagName(tagName, pageable)
             .map(mapper::mapToDto);
     }
 

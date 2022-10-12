@@ -22,6 +22,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import ru.clevertec.ecl.model.entityGraph.EntityGraphNames;
 
 @Data
 @Builder
@@ -29,7 +30,7 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Entity
 @NamedEntityGraph(
-    name = "certificate-with-tags",
+    name = EntityGraphNames.CERTIFICATE_WITH_TAGS,
     attributeNodes = @NamedAttributeNode(GiftCertificate_.TAGS))
 public class GiftCertificate {
 
