@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.controller;
 
+import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
+import ru.clevertec.ecl.dto.response.TagOfUserDto;
 import ru.clevertec.ecl.facade.TagFacade;
 
 @Slf4j
@@ -36,6 +38,12 @@ public class TagController {
     @GetMapping("/{id}")
     public TagDto findById(@PathVariable long id) {
         return tagFacade.findById(id);
+    }
+
+    @ApiOperation("Find the most used tag by the user that spent the most money")
+    @GetMapping("/most-used-by-valuable-user")
+    public TagOfUserDto findMostValuableTag() {
+        return tagFacade.findMostValuableTag();
     }
 
     @PostMapping

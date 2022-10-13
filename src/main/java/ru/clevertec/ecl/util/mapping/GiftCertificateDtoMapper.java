@@ -24,6 +24,7 @@ public interface GiftCertificateDtoMapper {
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "createDate", ignore = true)
     @Mapping(target = "lastUpdateDate", ignore = true)
+    @Mapping(target = "orders", ignore = true)
     GiftCertificate mapCreationDtoToEntity(GiftCertificateCreateDto createDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -31,5 +32,6 @@ public interface GiftCertificateDtoMapper {
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "createDate", ignore = true)
     @Mapping(target = "lastUpdateDate", ignore = true)
+    @Mapping(target = "orders", ignore = true)
     void updateEntityIgnoringTags(@MappingTarget GiftCertificate target, GiftCertificateUpdateDto updateDto);
 }

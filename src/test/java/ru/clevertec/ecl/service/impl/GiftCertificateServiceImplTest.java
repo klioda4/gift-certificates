@@ -74,19 +74,6 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void givenPageableAndTagName_whenFindByTagName_thenReturnCorrectPage() {
-        String givenTagName = "test";
-        Pageable givenPageable = Pageable.ofSize(20);
-        Page<GiftCertificate> stubbedResult = new PageImpl<>(getListOfSingleGiftCertificate());
-        when(certificateRepository.findByTagName(givenTagName, givenPageable))
-            .thenReturn(stubbedResult);
-
-        Page<GiftCertificate> actual = certificateService.findByTagName(givenTagName, givenPageable);
-
-        assertEquals(stubbedResult, actual);
-    }
-
-    @Test
     void givenId_whenFindById_thenReturnExpectedGiftCertificate() {
         long givenId = 1;
         when(

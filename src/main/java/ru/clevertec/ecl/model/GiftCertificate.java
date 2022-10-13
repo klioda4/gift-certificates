@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
 import ru.clevertec.ecl.model.entityGraph.EntityGraphNames;
 
 @Data
@@ -32,6 +34,7 @@ import ru.clevertec.ecl.model.entityGraph.EntityGraphNames;
 @NamedEntityGraph(
     name = EntityGraphNames.CERTIFICATE_WITH_TAGS,
     attributeNodes = @NamedAttributeNode(GiftCertificate_.TAGS))
+@DynamicUpdate
 public class GiftCertificate {
 
     @Id
@@ -58,6 +61,12 @@ public class GiftCertificate {
         name = "gift_certificate_tag",
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags = new ArrayList<>();
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
+    @OneToMany(mappedBy = "giftCertificate")
+    private List<Order> orders = new ArrayList<>();
 
     @PrePersist
     private void initDates() {

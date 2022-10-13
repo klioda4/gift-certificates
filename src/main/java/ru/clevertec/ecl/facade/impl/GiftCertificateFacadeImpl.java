@@ -1,11 +1,13 @@
 package ru.clevertec.ecl.facade.impl;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.clevertec.ecl.dto.response.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
+import ru.clevertec.ecl.dto.request.GiftCertificatePriceUpdateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.facade.GiftCertificateFacade;
 import ru.clevertec.ecl.service.GiftCertificateService;
@@ -26,8 +28,8 @@ public class GiftCertificateFacadeImpl implements GiftCertificateFacade {
     }
 
     @Override
-    public Page<GiftCertificateDto> findByTagName(String tagName, Pageable pageable) {
-        return certificateService.findByTagName(tagName, pageable)
+    public Page<GiftCertificateDto> findAllByTagNames(List<String> tagNames, Pageable pageable) {
+        return certificateService.findAllByTagNames(tagNames, pageable)
             .map(certificateMapper::mapToDto);
     }
 
@@ -47,6 +49,11 @@ public class GiftCertificateFacadeImpl implements GiftCertificateFacade {
     public GiftCertificateDto updateById(long id, GiftCertificateUpdateDto updateDto) {
         return certificateMapper.mapToDto(
             certificateService.updateById(id, updateDto));
+    }
+
+    @Override
+    public void updatePriceById(long id, GiftCertificatePriceUpdateDto priceUpdateDto) {
+        certificateService.updatePriceById(id, priceUpdateDto);
     }
 
     @Override

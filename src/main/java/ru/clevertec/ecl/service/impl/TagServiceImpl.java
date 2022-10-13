@@ -11,6 +11,7 @@ import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.exception.IntegrityViolationException;
 import ru.clevertec.ecl.model.Tag;
 import ru.clevertec.ecl.model.Tag_;
+import ru.clevertec.ecl.model.projection.TagOfUser;
 import ru.clevertec.ecl.repository.TagRepository;
 import ru.clevertec.ecl.service.TagService;
 import ru.clevertec.ecl.util.constant.ErrorDescription;
@@ -35,6 +36,11 @@ public class TagServiceImpl implements TagService {
     public Tag findById(long id) {
         return tagRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(TAG_ENTITY_NAME, Tag_.ID, id));
+    }
+
+    @Override
+    public TagOfUser findMostValuableTag() {
+        return tagRepository.findMostUsedTagOfMostValuableUser();
     }
 
     @Override

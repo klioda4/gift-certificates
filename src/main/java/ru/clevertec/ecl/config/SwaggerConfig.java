@@ -2,7 +2,9 @@ package ru.clevertec.ecl.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RestController;
+import ru.clevertec.ecl.controller.swagger.PageableRequestDescription;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -20,6 +22,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
             .groupName("public-api")
             .apiInfo(apiInfo())
+            .directModelSubstitute(Pageable.class, PageableRequestDescription.class)
             .select()
             .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
             .paths(PathSelectors.any())

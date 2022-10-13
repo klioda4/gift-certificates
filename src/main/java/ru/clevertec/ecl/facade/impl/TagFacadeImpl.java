@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
+import ru.clevertec.ecl.dto.response.TagOfUserDto;
 import ru.clevertec.ecl.facade.TagFacade;
 import ru.clevertec.ecl.service.TagService;
 import ru.clevertec.ecl.util.mapping.TagDtoMapper;
@@ -27,6 +28,12 @@ public class TagFacadeImpl implements TagFacade {
     public TagDto findById(long id) {
         return tagMapper.mapToDto(
             tagService.findById(id));
+    }
+
+    @Override
+    public TagOfUserDto findMostValuableTag() {
+        return tagMapper.mapToDto(
+            tagService.findMostValuableTag());
     }
 
     @Override

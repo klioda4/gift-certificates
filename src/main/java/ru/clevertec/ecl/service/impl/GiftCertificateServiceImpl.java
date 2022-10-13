@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
+import ru.clevertec.ecl.dto.request.GiftCertificatePriceUpdateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.model.GiftCertificate;
@@ -28,6 +29,9 @@ import ru.clevertec.ecl.util.mapping.GiftCertificateDtoMapper;
 @Service
 @Transactional(readOnly = true)
 public class GiftCertificateServiceImpl implements GiftCertificateService {
+
+    private static final String CERTIFICATE_ENTITY_NAME = "GiftCertificate";
+    private static final int FIRST_INDEX = 0;
 
     private final GiftCertificateRepository certificateRepository;
     private final GiftCertificateDtoMapper certificateMapper;
@@ -46,14 +50,24 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public Page<GiftCertificate> findByTagName(String tagName, Pageable pageable) {
-        return certificateRepository.findByTagName(tagName, pageable);
+    public Page<GiftCertificate> findAllByTagNames(List<String> tagNames, Pageable pageable) {
+        if (tagNames.size() == 1) {
+            return certificateRepository.findAllByTagName(tagNames.get(FIRST_INDEX), pageable);
+        } else {
+            return certificateRepository.findAllByAllTagNames(tagNames, tagNames.size(), pageable);
+        }
     }
 
     @Override
     public GiftCertificate findById(long id) {
         return certificateRepository.findById(id, NamedEntityGraph.fetching(EntityGraphNames.CERTIFICATE_WITH_TAGS))
-            .orElseThrow(() -> new EntityNotFoundException("GiftCertificate", "id", id));
+            .orElseThrow(() -> new EntityNotFoundException(CERTIFICATE_ENTITY_NAME, GiftCertificate_.ID, id));
+    }
+
+    @Override
+    public GiftCertificate findByIdLazy(long id) {
+        return certificateRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(CERTIFICATE_ENTITY_NAME, GiftCertificate_.ID, id));
     }
 
     @Override
@@ -69,7 +83,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificate updateById(long id, GiftCertificateUpdateDto updateDto) {
-        GiftCertificate giftCertificate = findByIdWithoutFetch(id);
+        GiftCertificate giftCertificate = findById(id);
         certificateMapper.updateEntityIgnoringTags(giftCertificate, updateDto);
         updateTagsIfPresent(giftCertificate, updateDto.getTagNames());
         return certificateRepository.save(giftCertificate);
@@ -77,14 +91,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     @Transactional
-    public void deleteById(long id) {
-        GiftCertificate certificate = findByIdWithoutFetch(id);
-        certificateRepository.delete(certificate);
+    public void updatePriceById(long id, GiftCertificatePriceUpdateDto priceUpdateDto) {
+        GiftCertificate giftCertificate = findByIdLazy(id);
+        giftCertificate.setPrice(priceUpdateDto.getPrice());
+        certificateRepository.save(giftCertificate);
     }
 
-    private GiftCertificate findByIdWithoutFetch(long id) {
-        return certificateRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("GiftCertificate", "id", id));
+    @Override
+    @Transactional
+    public void deleteById(long id) {
+        GiftCertificate certificate = findByIdLazy(id);
+        certificateRepository.delete(certificate);
     }
 
     private List<Tag> findOrCreateTags(List<String> tagNames) {
