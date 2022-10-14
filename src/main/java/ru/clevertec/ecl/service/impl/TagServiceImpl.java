@@ -21,26 +21,28 @@ import ru.clevertec.ecl.util.mapping.TagDtoMapper;
 @Transactional(readOnly = true)
 public class TagServiceImpl implements TagService {
 
-    private final TagRepository repository;
-    private final TagDtoMapper mapper;
+    private static final String TAG_ENTITY_NAME = "Tag";
+
+    private final TagRepository tagRepository;
+    private final TagDtoMapper tagMapper;
 
     @Override
     public Page<Tag> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
+        return tagRepository.findAll(pageable);
     }
 
     @Override
     public Tag findById(long id) {
-        return repository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Tag", "id", id));
+        return tagRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(TAG_ENTITY_NAME, Tag_.ID, id));
     }
 
     @Override
     @Transactional
     public Tag create(TagPutDto createDto) {
         checkNameNotExists(createDto.getName());
-        Tag newTag = mapper.mapPutDtoToEntity(createDto);
-        return repository.save(newTag);
+        Tag newTag = tagMapper.mapPutDtoToEntity(createDto);
+        return tagRepository.save(newTag);
     }
 
     @Override
@@ -48,29 +50,29 @@ public class TagServiceImpl implements TagService {
     public Tag updateById(long id, TagPutDto putDto) {
         findById(id);
         checkNameNotExists(putDto.getName());
-        Tag tagToPut = mapper.mapPutDtoToEntity(putDto);
+        Tag tagToPut = tagMapper.mapPutDtoToEntity(putDto);
         tagToPut.setId(id);
-        return repository.save(tagToPut);
+        return tagRepository.save(tagToPut);
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
         Tag tagToDelete = findById(id);
-        repository.delete(tagToDelete);
+        tagRepository.delete(tagToDelete);
     }
 
     @Override
     @Transactional
     public Tag findOrCreateByName(String name) {
-        return repository.findByName(name)
+        return tagRepository.findByName(name)
             .orElseGet(() -> saveByName(name));
     }
 
     private Tag saveByName(String name) {
-        return repository.save(Tag.builder()
-            .name(name)
-            .build());
+        return tagRepository.save(Tag.builder()
+                                      .name(name)
+                                      .build());
     }
 
     private void checkNameNotExists(String name) {
@@ -78,9 +80,9 @@ public class TagServiceImpl implements TagService {
             Tag.builder()
                 .name(name)
                 .build());
-        if (repository.exists(nameExample)) {
+        if (tagRepository.exists(nameExample)) {
             throw new IntegrityViolationException(Tag.class.getSimpleName(), Tag_.NAME, name,
-                ErrorDescription.TAG_ALREADY_EXISTS);
+                                                  ErrorDescription.TAG_ALREADY_EXISTS);
         }
     }
 }

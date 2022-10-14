@@ -2,7 +2,7 @@ package ru.clevertec.ecl.facade;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.clevertec.ecl.dto.TagDto;
+import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
 
 public interface TagFacade {

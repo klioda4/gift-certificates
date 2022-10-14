@@ -13,10 +13,7 @@ CREATE TABLE IF NOT EXISTS gift_certificate (
     price            DECIMAL(7, 2) NOT NULL,
     duration         INT           NOT NULL,
     create_date      TIMESTAMP     NOT NULL,
-    last_update_date TIMESTAMP     NOT NULL,
-
-    CHECK (price >= 0),
-    CHECK (duration >= 0)
+    last_update_date TIMESTAMP     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS gift_certificate_tag (

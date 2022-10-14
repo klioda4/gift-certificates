@@ -8,7 +8,7 @@ import ru.clevertec.ecl.model.GiftCertificate;
 
 public interface GiftCertificateService {
 
-    Page<GiftCertificate> findByNameAndDescription(String nameSample, String descriptionSample, Pageable pageable);
+    Page<GiftCertificate> findAllByNameAndDescription(String nameSample, String descriptionSample, Pageable pageable);
 
     Page<GiftCertificate> findByTagName(String tagName, Pageable pageable);
 

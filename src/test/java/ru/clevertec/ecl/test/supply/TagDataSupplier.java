@@ -1,10 +1,12 @@
 package ru.clevertec.ecl.test.supply;
 
-import ru.clevertec.ecl.dto.TagDto;
+import java.util.Collections;
+import java.util.List;
 import ru.clevertec.ecl.dto.request.TagPutDto;
+import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.model.Tag;
 
-public class TagTestDataSupplier {
+public class TagDataSupplier {
 
     public static final long DEFAULT_ID = 1L;
     public static final String DEFAULT_NAME = "default-tag";
@@ -23,5 +25,9 @@ public class TagTestDataSupplier {
 
     public static Tag getTagMappedFromPutDto() {
         return new Tag(0L, DEFAULT_NAME);
+    }
+
+    public static List<Tag> getListOfSingleTag() {
+        return Collections.singletonList(getTag());
     }
 }

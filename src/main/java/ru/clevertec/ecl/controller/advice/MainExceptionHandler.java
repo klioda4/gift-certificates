@@ -56,8 +56,9 @@ public class MainExceptionHandler {
                 messageBuilder.append(" - ");
                 messageBuilder.append(fieldError.getDefaultMessage());
             });
-        return getResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, ErrorDescription.DTO_VALIDATION_FAILED.getCode(),
-            messageBuilder.toString());
+        return getResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY,
+                                 ErrorDescription.DTO_VALIDATION_FAILED.getCode(),
+                                 messageBuilder.toString());
     }
 
     @ExceptionHandler(DataAccessException.class)
@@ -81,8 +82,9 @@ public class MainExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ExceptionResponse> handleHttpRequestMethodNotSupportedException(Exception e) {
         log.info(e.getMessage(), e);
-        return getResponseEntity(HttpStatus.METHOD_NOT_ALLOWED, ErrorDescription.METHOD_NOT_SUPPORTED.getCode(),
-            HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
+        return getResponseEntity(HttpStatus.METHOD_NOT_ALLOWED,
+                                 ErrorDescription.METHOD_NOT_SUPPORTED.getCode(),
+                                 HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
     }
 
     private ResponseEntity<ExceptionResponse> getResponseEntity(HttpStatus status, int errorCode, String errorMessage) {

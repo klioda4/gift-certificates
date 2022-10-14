@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.clevertec.ecl.dto.GiftCertificateDto;
+import ru.clevertec.ecl.dto.response.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.facade.GiftCertificateFacade;
@@ -30,45 +30,45 @@ import ru.clevertec.ecl.util.validate.constraint.NotBlankOrNull;
 @Validated
 public class GiftCertificateController {
 
-    private final GiftCertificateFacade facade;
+    private final GiftCertificateFacade certificateFacade;
 
     @GetMapping
-    public Page<GiftCertificateDto> findByNameAndDescription(@NotBlankOrNull String nameSample,
-                                                             @NotBlankOrNull String descriptionSample,
-                                                             Pageable pageable) {
-        log.info("GET request to /api/v1/gift-certificates with params: nameSample={}, descriptionSample={}, "
+    public Page<GiftCertificateDto> findAllByNameAndDescription(@NotBlankOrNull String nameSample,
+                                                                @NotBlankOrNull String descriptionSample,
+                                                                Pageable pageable) {
+        log.info("GET request to /v1/gift-certificates with params: nameSample={}, descriptionSample={}, "
                      + "pageable={}", nameSample, descriptionSample, pageable);
-        return facade.findByNameAndDescription(nameSample, descriptionSample, pageable);
+        return certificateFacade.findAllByNameAndDescription(nameSample, descriptionSample, pageable);
     }
 
     @GetMapping("/tag/{tagName}")
     public Page<GiftCertificateDto> findByTagName(@PathVariable @NotBlank String tagName,
                                                   Pageable pageable) {
-        log.info("GET request to /api/v1/gift-certificates/tag/{tagName} with params: tagName = {}, pageable = {}",
+        log.info("GET request to /v1/gift-certificates/tag/{tagName} with params: tagName = {}, pageable = {}",
                  tagName, pageable);
-        return facade.findByTagName(tagName, pageable);
+        return certificateFacade.findByTagName(tagName, pageable);
     }
 
     @GetMapping("/{id}")
     public GiftCertificateDto findById(@PathVariable long id) {
-        return facade.findById(id);
+        return certificateFacade.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto create(@RequestBody @Valid GiftCertificateCreateDto newItem) {
-        return facade.create(newItem);
+    public GiftCertificateDto create(@RequestBody @Valid GiftCertificateCreateDto createDto) {
+        return certificateFacade.create(createDto);
     }
 
     @PutMapping("/{id}")
     public GiftCertificateDto updateById(@PathVariable long id,
                                          @RequestBody @Valid GiftCertificateUpdateDto updateDto) {
-        return facade.updateById(id, updateDto);
+        return certificateFacade.updateById(id, updateDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable long id) {
-        facade.deleteById(id);
+        certificateFacade.deleteById(id);
     }
 }

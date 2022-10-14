@@ -16,16 +16,16 @@ import ru.clevertec.ecl.model.Tag;
 @ActiveProfiles("test")
 class TagRepositoryTest {
 
-    private final TagRepository repository;
+    private final TagRepository tagRepository;
 
     @Test
-    void findByName() {
+    void givenName_whenFindByName_thenReturnExpectedTag() {
         String givenName = "halloween";
 
-        Optional<Tag> resultTag = repository.findByName(givenName);
+        Optional<Tag> actualTag = tagRepository.findByName(givenName);
 
-        Tag expected = new Tag(1L, "halloween");
-        assertTrue(resultTag.isPresent(), "Tag with given name is not found");
-        assertEquals(expected, resultTag.get());
+        Tag expectedTag = new Tag(1L, "halloween");
+        assertTrue(actualTag.isPresent(), "Tag with given name is not found");
+        assertEquals(expectedTag, actualTag.get());
     }
 }

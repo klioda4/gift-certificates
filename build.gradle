@@ -39,18 +39,18 @@ configurations.all {
 dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor'
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.springframework.boot:spring-boot-starter-log4j2'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     compileOnly 'io.springfox:springfox-boot-starter'
     compileOnly 'org.mapstruct:mapstruct'
+    runtimeOnly 'org.springframework.boot:spring-boot-starter-log4j2'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'com.cosium.spring.data:spring-data-jpa-entity-graph'
     implementation 'org.liquibase:liquibase-core'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'com.h2database:h2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mapstruct:mapstruct'
 }
 

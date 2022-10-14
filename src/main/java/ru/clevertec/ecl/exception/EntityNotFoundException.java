@@ -20,8 +20,8 @@ public class EntityNotFoundException extends RuntimeException {
 
     private static String getFormattedMessage(String searchField, Object searchValue, String objectClassName) {
         return String.format(MESSAGE_TEMPLATE,
-            objectClassName == null ? "Object" : objectClassName,
-            searchField == null ? "value" : searchField,
-            searchValue == null ? "" : searchValue);
+                             objectClassName == null ? "Entity" : objectClassName,
+                             searchField == null ? "value" : searchField,
+                             searchValue == null ? "" : searchValue);
     }
 }

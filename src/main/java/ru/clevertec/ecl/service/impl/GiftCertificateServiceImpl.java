@@ -29,61 +29,61 @@ import ru.clevertec.ecl.util.mapping.GiftCertificateDtoMapper;
 @Transactional(readOnly = true)
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    private final GiftCertificateRepository repository;
-    private final GiftCertificateDtoMapper mapper;
+    private final GiftCertificateRepository certificateRepository;
+    private final GiftCertificateDtoMapper certificateMapper;
     private final TagService tagService;
 
     @Override
-    public Page<GiftCertificate> findByNameAndDescription(String nameSample, String descriptionSample,
-                                                          Pageable pageable) {
+    public Page<GiftCertificate> findAllByNameAndDescription(String nameSample, String descriptionSample,
+                                                             Pageable pageable) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
             .withMatcher(GiftCertificate_.NAME, GenericPropertyMatchers.contains().ignoreCase())
             .withMatcher(GiftCertificate_.DESCRIPTION, GenericPropertyMatchers.contains().ignoreCase());
         GiftCertificate certificateExample = createCertificateExample(nameSample, descriptionSample);
-        return repository.findAll(Example.of(certificateExample, exampleMatcher),
-                                  pageable,
-                                  NamedEntityGraph.fetching(EntityGraphNames.CERTIFICATE_WITH_TAGS));
+        return certificateRepository.findAll(Example.of(certificateExample, exampleMatcher),
+                                             pageable,
+                                             NamedEntityGraph.fetching(EntityGraphNames.CERTIFICATE_WITH_TAGS));
     }
 
     @Override
     public Page<GiftCertificate> findByTagName(String tagName, Pageable pageable) {
-        return repository.findByTagName(tagName, pageable);
+        return certificateRepository.findByTagName(tagName, pageable);
     }
 
     @Override
     public GiftCertificate findById(long id) {
-        return repository.findById(id, NamedEntityGraph.fetching(EntityGraphNames.CERTIFICATE_WITH_TAGS))
+        return certificateRepository.findById(id, NamedEntityGraph.fetching(EntityGraphNames.CERTIFICATE_WITH_TAGS))
             .orElseThrow(() -> new EntityNotFoundException("GiftCertificate", "id", id));
     }
 
     @Override
     @Transactional
     public GiftCertificate create(GiftCertificateCreateDto creationDto) {
-        GiftCertificate newCertificate = mapper.mapCreationDtoToEntity(creationDto);
+        GiftCertificate newCertificate = certificateMapper.mapCreationDtoToEntity(creationDto);
         List<String> tagNames = creationDto.getTagNames();
         List<Tag> loadedTags = findOrCreateTags(tagNames);
         newCertificate.setTags(loadedTags);
-        return repository.save(newCertificate);
+        return certificateRepository.save(newCertificate);
     }
 
     @Override
     @Transactional
     public GiftCertificate updateById(long id, GiftCertificateUpdateDto updateDto) {
         GiftCertificate giftCertificate = findByIdWithoutFetch(id);
-        mapper.updateEntityIgnoringTags(giftCertificate, updateDto);
+        certificateMapper.updateEntityIgnoringTags(giftCertificate, updateDto);
         updateTagsIfPresent(giftCertificate, updateDto.getTagNames());
-        return repository.save(giftCertificate);
+        return certificateRepository.save(giftCertificate);
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
         GiftCertificate certificate = findByIdWithoutFetch(id);
-        repository.delete(certificate);
+        certificateRepository.delete(certificate);
     }
 
     private GiftCertificate findByIdWithoutFetch(long id) {
-        return repository.findById(id)
+        return certificateRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("GiftCertificate", "id", id));
     }
 
