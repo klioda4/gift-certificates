@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,6 +31,7 @@ public class User {
     private String name;
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "user")
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 }
