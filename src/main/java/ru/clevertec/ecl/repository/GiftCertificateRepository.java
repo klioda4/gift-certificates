@@ -40,4 +40,8 @@ public interface GiftCertificateRepository extends EntityGraphJpaRepository<Gift
             + "       group by gc.id"
             + "       having count(gc.id) = :tagNamesSize")
     Page<GiftCertificate> findAllByAllTagNames(List<String> tagNames, long tagNamesSize, Pageable pageable);
+
+    default Page<GiftCertificate> findAllByAllTagNames(List<String> tagNames, Pageable pageable) {
+        return findAllByAllTagNames(tagNames, tagNames.size(), pageable);
+    }
 }

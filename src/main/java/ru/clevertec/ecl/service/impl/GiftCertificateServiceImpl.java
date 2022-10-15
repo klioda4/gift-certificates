@@ -54,7 +54,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (tagNames.size() == 1) {
             return certificateRepository.findAllByTagName(tagNames.get(FIRST_INDEX), pageable);
         } else {
-            return certificateRepository.findAllByAllTagNames(tagNames, tagNames.size(), pageable);
+            return certificateRepository.findAllByAllTagNames(tagNames, pageable);
         }
     }
 

@@ -1,7 +1,7 @@
 package ru.clevertec.ecl.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,19 +46,25 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public Tag create(TagPutDto createDto) {
-        checkNameNotExists(createDto.getName());
-        Tag newTag = tagMapper.mapPutDtoToEntity(createDto);
-        return tagRepository.save(newTag);
+        try {
+            Tag newTag = tagMapper.mapPutDtoToEntity(createDto);
+            return tagRepository.saveAndFlush(newTag);
+        } catch (DataIntegrityViolationException e) {
+            throw createTagIntegrityViolationException(createDto.getName());
+        }
     }
 
     @Override
     @Transactional
     public Tag updateById(long id, TagPutDto putDto) {
         findById(id);
-        checkNameNotExists(putDto.getName());
-        Tag tagToPut = tagMapper.mapPutDtoToEntity(putDto);
-        tagToPut.setId(id);
-        return tagRepository.save(tagToPut);
+        try {
+            Tag tagToPut = tagMapper.mapPutDtoToEntity(putDto);
+            tagToPut.setId(id);
+            return tagRepository.saveAndFlush(tagToPut);
+        } catch (DataIntegrityViolationException e) {
+            throw createTagIntegrityViolationException(putDto.getName());
+        }
     }
 
     @Override
@@ -72,23 +78,13 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public Tag findOrCreateByName(String name) {
         return tagRepository.findByName(name)
-            .orElseGet(() -> saveByName(name));
+            .orElseGet(() -> tagRepository.save(Tag.builder()
+                                                    .name(name)
+                                                    .build()));
     }
 
-    private Tag saveByName(String name) {
-        return tagRepository.save(Tag.builder()
-                                      .name(name)
-                                      .build());
-    }
-
-    private void checkNameNotExists(String name) {
-        Example<Tag> nameExample = Example.of(
-            Tag.builder()
-                .name(name)
-                .build());
-        if (tagRepository.exists(nameExample)) {
-            throw new IntegrityViolationException(Tag.class.getSimpleName(), Tag_.NAME, name,
-                                                  ErrorDescription.TAG_ALREADY_EXISTS);
-        }
+    private IntegrityViolationException createTagIntegrityViolationException(String tagName) {
+        return new IntegrityViolationException(TAG_ENTITY_NAME, Tag_.NAME, tagName,
+                                               ErrorDescription.TAG_ALREADY_EXISTS);
     }
 }

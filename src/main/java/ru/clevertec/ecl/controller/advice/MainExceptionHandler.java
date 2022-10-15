@@ -35,7 +35,7 @@ public class MainExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleEntityNotFoundException(Exception e) {
         log.info(e.getMessage());
-        return getResponseEntity(HttpStatus.NOT_FOUND, ErrorDescription.OBJECT_NOT_EXISTS);
+        return getResponseEntity(HttpStatus.NOT_FOUND, ErrorDescription.OBJECT_NOT_EXISTS.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(ValidationException.class)
