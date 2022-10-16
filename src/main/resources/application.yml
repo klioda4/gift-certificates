@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: "local"
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+server:
+  servlet:
+    context-path: /api

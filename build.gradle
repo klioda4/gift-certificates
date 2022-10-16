@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'war'
+    id "io.freefair.lombok" version "6.5.1"
+    id "io.spring.dependency-management" version "1.0.14.RELEASE"
+    id 'org.springframework.boot' version '2.7.4'
+}
+
+group 'ru.clevertec.ecl'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    dependencies {
+        dependencySet(group: 'org.mapstruct', version: '1.5.2.Final') {
+            entry 'mapstruct'
+            entry 'mapstruct-processor'
+        }
+        dependencySet(group: 'org.apache.logging.log4j', version: '2.19.0') {
+            entry 'log4j-api'
+            entry 'log4j-core'
+            entry 'log4j-jul'
+            entry 'log4j-slf4j-impl'
+        }
+        dependency 'io.springfox:springfox-boot-starter:3.0.0'
+        dependency 'org.postgresql:postgresql:42.5.0'
+        dependency 'com.cosium.spring.data:spring-data-jpa-entity-graph:2.7.10'
+        dependency 'org.liquibase:liquibase-core:4.16.1'
+    }
+}
+
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+dependencies {
+    annotationProcessor 'org.mapstruct:mapstruct-processor'
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.springframework.boot:spring-boot-starter-log4j2'
+    compileOnly 'io.springfox:springfox-boot-starter'
+
+    compileOnly 'org.mapstruct:mapstruct'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    implementation 'com.cosium.spring.data:spring-data-jpa-entity-graph'
+    implementation 'org.liquibase:liquibase-core'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'com.h2database:h2'
+    testImplementation 'org.mapstruct:mapstruct'
+}
+
+test {
+    useJUnitPlatform()
+}
