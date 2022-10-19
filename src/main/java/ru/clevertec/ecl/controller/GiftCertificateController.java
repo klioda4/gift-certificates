@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.clevertec.ecl.dto.response.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificatePriceUpdateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
+import ru.clevertec.ecl.dto.response.GiftCertificateDto;
 import ru.clevertec.ecl.facade.GiftCertificateFacade;
 import ru.clevertec.ecl.util.validate.constraint.NotBlankOrNull;
 
@@ -56,7 +57,7 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/{id}")
-    public GiftCertificateDto findById(@PathVariable long id) {
+    public GiftCertificateDto findById(@PathVariable @Positive long id) {
         return certificateFacade.findById(id);
     }
 
@@ -67,21 +68,21 @@ public class GiftCertificateController {
     }
 
     @PutMapping("/{id}")
-    public GiftCertificateDto updateById(@PathVariable long id,
+    public GiftCertificateDto updateById(@PathVariable @Positive long id,
                                          @RequestBody @Valid GiftCertificateUpdateDto updateDto) {
         return certificateFacade.updateById(id, updateDto);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updatePriceById(@PathVariable long id,
+    public void updatePriceById(@PathVariable @Positive long id,
                                 @RequestBody @Valid GiftCertificatePriceUpdateDto priceUpdateDto) {
         certificateFacade.updatePriceById(id, priceUpdateDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable long id) {
+    public void deleteById(@PathVariable @Positive long id) {
         certificateFacade.deleteById(id);
     }
 

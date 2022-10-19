@@ -3,14 +3,12 @@ package ru.clevertec.ecl.util.mapping;
 import java.time.LocalDateTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants.ComponentModel;
 import ru.clevertec.ecl.dto.response.OrderDto;
 import ru.clevertec.ecl.model.GiftCertificate;
 import ru.clevertec.ecl.model.Order;
 import ru.clevertec.ecl.model.User;
 
-@Mapper(componentModel = ComponentModel.SPRING,
-        imports = LocalDateTime.class)
+@Mapper(imports = LocalDateTime.class)
 public interface OrderDtoMapper {
 
     @Mapping(target = "id", source = "order.id")

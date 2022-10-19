@@ -1,11 +1,13 @@
 package ru.clevertec.ecl.controller;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,19 +24,20 @@ import ru.clevertec.ecl.facade.OrderFacade;
 @Slf4j
 @RestController
 @RequestMapping("/v1/orders")
+@Validated
 public class OrderController {
 
     private final OrderFacade orderFacade;
 
     @GetMapping("/user/{userId}")
-    public Page<OrderDto> findAllByUserId(@PathVariable long userId,
+    public Page<OrderDto> findAllByUserId(@PathVariable @Positive long userId,
                                           Pageable pageable) {
         log.info("GET request to /v1/orders/user/{userId} with params: userId = {}, pageable = {}", userId, pageable);
         return orderFacade.findAllByUserId(userId, pageable);
     }
 
     @GetMapping("/user/{userId}/latest")
-    public OrderDto findMostRecentByUserId(@PathVariable long userId) {
+    public OrderDto findMostRecentByUserId(@PathVariable @Positive long userId) {
         return orderFacade.findMostRecentByUserId(userId);
     }
 
@@ -46,7 +49,7 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable long id) {
+    public void deleteById(@PathVariable @Positive long id) {
         orderFacade.deleteById(id);
     }
 }

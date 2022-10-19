@@ -24,11 +24,11 @@ import ru.clevertec.ecl.model.User;
 import ru.clevertec.ecl.repository.OrderRepository;
 import ru.clevertec.ecl.service.GiftCertificateService;
 import ru.clevertec.ecl.service.UserService;
+import ru.clevertec.ecl.test.stub.StubHelper;
 import ru.clevertec.ecl.test.supply.GiftCertificateDataSupplier;
 import ru.clevertec.ecl.test.supply.OrderDataSupplier;
 import ru.clevertec.ecl.test.supply.UserDataSupplier;
 import ru.clevertec.ecl.util.mapping.OrderDtoMapper;
-import ru.clevertec.ecl.test.stub.StubHelper;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {

@@ -3,10 +3,10 @@ package ru.clevertec.ecl.facade;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.clevertec.ecl.dto.response.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificatePriceUpdateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
+import ru.clevertec.ecl.dto.response.GiftCertificateDto;
 
 public interface GiftCertificateFacade {
 

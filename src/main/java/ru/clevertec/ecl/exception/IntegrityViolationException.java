@@ -17,7 +17,7 @@ public class IntegrityViolationException extends RuntimeException {
                                        String fieldName,
                                        Object value,
                                        ErrorDescription errorDescription) {
-        super(getFormattedMessage(objectClassName, fieldName, value, errorDescription.getMessage()));
+        super(getFormattedMessage(objectClassName, fieldName, value, errorDescription.getDefaultMessage()));
         this.objectClassName = objectClassName;
         this.fieldName = fieldName;
         this.value = value;
