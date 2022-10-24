@@ -1,22 +1,25 @@
 package ru.clevertec.ecl.service.impl;
 
+import static java.util.stream.Collectors.toList;
+
 import com.cosium.spring.data.jpa.entity.graph.domain2.NamedEntityGraph;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
-import ru.clevertec.ecl.dto.request.GiftCertificateFilterDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.model.GiftCertificate;
+import ru.clevertec.ecl.model.GiftCertificate_;
 import ru.clevertec.ecl.model.Tag;
+import ru.clevertec.ecl.model.entityGraph.EntityGraphNames;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
-import ru.clevertec.ecl.repository.specification.GiftCertificateSpecifications;
 import ru.clevertec.ecl.service.GiftCertificateService;
 import ru.clevertec.ecl.service.TagService;
 import ru.clevertec.ecl.util.mapping.GiftCertificateDtoMapper;
@@ -26,34 +29,30 @@ import ru.clevertec.ecl.util.mapping.GiftCertificateDtoMapper;
 @Transactional(readOnly = true)
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    private static final String CERTIFICATE_WITH_TAGS_ENTITY_GRAPH = "certificate-with-tags";
-
     private final GiftCertificateRepository repository;
     private final GiftCertificateDtoMapper mapper;
     private final TagService tagService;
 
     @Override
-    public Page<GiftCertificate> findAllByFilters(Pageable pageable, GiftCertificateFilterDto filterDto) {
-        Specification<GiftCertificate> isNameLikeSample = GiftCertificateSpecifications
-            .isNameLikeOptional(filterDto.getNameSample());
+    public Page<GiftCertificate> findByNameAndDescription(String nameSample, String descriptionSample,
+                                                          Pageable pageable) {
+        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
+            .withMatcher(GiftCertificate_.NAME, GenericPropertyMatchers.contains().ignoreCase())
+            .withMatcher(GiftCertificate_.DESCRIPTION, GenericPropertyMatchers.contains().ignoreCase());
+        GiftCertificate certificateExample = createCertificateExample(nameSample, descriptionSample);
+        return repository.findAll(Example.of(certificateExample, exampleMatcher),
+                                  pageable,
+                                  NamedEntityGraph.fetching(EntityGraphNames.CERTIFICATE_WITH_TAGS));
+    }
 
-        Specification<GiftCertificate> isDescriptionLikeSample = GiftCertificateSpecifications
-            .isDescriptionLikeOptional(filterDto.getDescriptionSample());
-
-        Specification<GiftCertificate> isTagPresent = GiftCertificateSpecifications
-            .isTagPresentOptional(filterDto.getTagName());
-
-        return repository.findAll(
-            Specification.where(isNameLikeSample
-                .and(isDescriptionLikeSample)
-                .and(isTagPresent)),
-            pageable,
-            NamedEntityGraph.fetching(CERTIFICATE_WITH_TAGS_ENTITY_GRAPH));
+    @Override
+    public Page<GiftCertificate> findByTagName(String tagName, Pageable pageable) {
+        return repository.findByTagName(tagName, pageable);
     }
 
     @Override
     public GiftCertificate findById(long id) {
-        return repository.findById(id, NamedEntityGraph.fetching(CERTIFICATE_WITH_TAGS_ENTITY_GRAPH))
+        return repository.findById(id, NamedEntityGraph.fetching(EntityGraphNames.CERTIFICATE_WITH_TAGS))
             .orElseThrow(() -> new EntityNotFoundException("GiftCertificate", "id", id));
     }
 
@@ -91,7 +90,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private List<Tag> findOrCreateTags(List<String> tagNames) {
         return tagNames.stream()
             .map(tagService::findOrCreateByName)
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     private void updateTagsIfPresent(GiftCertificate certificate, List<String> tagNames) {
@@ -100,5 +99,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
         List<Tag> loadedTags = findOrCreateTags(tagNames);
         certificate.setTags(loadedTags);
+    }
+
+    private GiftCertificate createCertificateExample(String name, String description) {
+        return GiftCertificate.builder()
+            .name(name)
+            .description(description)
+            .build();
     }
 }

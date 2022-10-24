@@ -2,6 +2,7 @@ package ru.clevertec.ecl.controller.advice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,12 @@ public class MainExceptionHandler {
             });
         return getResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, ErrorDescription.DTO_VALIDATION_FAILED.getCode(),
             messageBuilder.toString());
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ExceptionResponse> handleDataAccessException(Exception e) {
+        log.error(e.getMessage(), e);
+        return getResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ErrorDescription.DATABASE_ERROR);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

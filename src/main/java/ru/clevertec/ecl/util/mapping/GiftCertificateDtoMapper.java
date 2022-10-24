@@ -22,14 +22,14 @@ public interface GiftCertificateDtoMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tags", ignore = true)
-    @Mapping(target = "createDate", expression = "java(LocalDateTime.now())")
-    @Mapping(target = "lastUpdateDate", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "createDate", ignore = true)
+    @Mapping(target = "lastUpdateDate", ignore = true)
     GiftCertificate mapCreationDtoToEntity(GiftCertificateCreateDto giftCertificateCreateDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "createDate", ignore = true)
-    @Mapping(target = "lastUpdateDate", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "lastUpdateDate", ignore = true)
     void updateEntityIgnoringTags(@MappingTarget GiftCertificate target, GiftCertificateUpdateDto updateDto);
 }

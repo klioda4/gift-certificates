@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,13 +40,13 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDto create(@RequestBody TagPutDto newTag) {
+    public TagDto create(@RequestBody @Valid TagPutDto newTag) {
         return facade.create(newTag);
     }
 
     @PutMapping("/{id}")
     public TagDto updateById(@PathVariable long id,
-                             @RequestBody TagPutDto putDto) {
+                             @RequestBody @Valid TagPutDto putDto) {
         return facade.updateById(id, putDto);
     }
 
