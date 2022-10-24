@@ -3,12 +3,13 @@ package ru.clevertec.ecl.test.supply;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import ru.clevertec.ecl.dto.GiftCertificateDto;
+import java.util.List;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
+import ru.clevertec.ecl.dto.response.GiftCertificateDto;
 import ru.clevertec.ecl.model.GiftCertificate;
 
-public class GiftCertificateTestDataSupplier {
+public class GiftCertificateDataSupplier {
 
     public static final long DEFAULT_ID = 1L;
     public static final String DEFAULT_NAME = "cert";
@@ -80,5 +81,9 @@ public class GiftCertificateTestDataSupplier {
             .createDate(DEFAULT_DATE)
             .lastUpdateDate(DEFAULT_DATE)
             .build();
+    }
+
+    public static List<GiftCertificate> getListOfSingleGiftCertificate() {
+        return Collections.singletonList(getGiftCertificate());
     }
 }

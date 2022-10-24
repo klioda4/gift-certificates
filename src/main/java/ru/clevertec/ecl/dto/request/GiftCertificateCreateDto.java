@@ -3,6 +3,7 @@ package ru.clevertec.ecl.dto.request;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.Builder;
@@ -26,5 +27,6 @@ public class GiftCertificateCreateDto {
     @NotNull
     Integer duration;
 
+    @NotEmpty
     List<@NotBlank String> tagNames;
 }

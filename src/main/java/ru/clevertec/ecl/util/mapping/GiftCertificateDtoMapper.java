@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import ru.clevertec.ecl.dto.GiftCertificateDto;
+import ru.clevertec.ecl.dto.response.GiftCertificateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateCreateDto;
 import ru.clevertec.ecl.dto.request.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.model.GiftCertificate;
@@ -18,18 +18,20 @@ import ru.clevertec.ecl.model.GiftCertificate;
     imports = LocalDateTime.class)
 public interface GiftCertificateDtoMapper {
 
-    GiftCertificateDto mapToDto(GiftCertificate dto);
+    GiftCertificateDto mapToDto(GiftCertificate certificate);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "createDate", ignore = true)
     @Mapping(target = "lastUpdateDate", ignore = true)
-    GiftCertificate mapCreationDtoToEntity(GiftCertificateCreateDto giftCertificateCreateDto);
+    @Mapping(target = "orders", ignore = true)
+    GiftCertificate mapCreationDtoToEntity(GiftCertificateCreateDto createDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "createDate", ignore = true)
     @Mapping(target = "lastUpdateDate", ignore = true)
+    @Mapping(target = "orders", ignore = true)
     void updateEntityIgnoringTags(@MappingTarget GiftCertificate target, GiftCertificateUpdateDto updateDto);
 }
