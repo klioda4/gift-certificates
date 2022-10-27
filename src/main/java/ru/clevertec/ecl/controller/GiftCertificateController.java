@@ -45,7 +45,11 @@ public class GiftCertificateController {
                                                                 Pageable pageable) {
         log.info("GET request to /v1/gift-certificates with params: nameSample={}, descriptionSample={}, "
                      + "pageable={}", nameSample, descriptionSample, pageable);
-        return certificateFacade.findAllByNameAndDescription(nameSample, descriptionSample, pageable);
+        Page<GiftCertificateDto> certificatesPage = certificateFacade.findAllByNameAndDescription(nameSample,
+                                                                                                  descriptionSample,
+                                                                                                  pageable);
+        log.info("Result = {}", certificatesPage);
+        return certificatesPage;
     }
 
     @GetMapping("/filtered/by-tags")
@@ -53,37 +57,52 @@ public class GiftCertificateController {
                                                       Pageable pageable) {
         log.info("GET request to /v1/gift-certificates/filtered/by-tags with params: tagNames = {}, pageable = {}",
                  tagNames, pageable);
-        return certificateFacade.findAllByTagNames(listOf(tagNames), pageable);
+        Page<GiftCertificateDto> certificatesPage = certificateFacade.findAllByTagNames(listOf(tagNames), pageable);
+        log.info("Result = {}", certificatesPage);
+        return certificatesPage;
     }
 
     @GetMapping("/{id}")
     public GiftCertificateDto findById(@PathVariable @Positive long id) {
-        return certificateFacade.findById(id);
+        log.info("GET request to /v1/gift-certificates/{id} with id = {}", id);
+        GiftCertificateDto certificateDto = certificateFacade.findById(id);
+        log.info("Result = {}", certificateDto);
+        return certificateDto;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto create(@RequestBody @Valid GiftCertificateCreateDto createDto) {
-        return certificateFacade.create(createDto);
+        log.info("POST request to /v1/gift-certificates with createDto = {}", createDto);
+        GiftCertificateDto certificateDto = certificateFacade.create(createDto);
+        log.info("Result = {}", certificateDto);
+        return certificateDto;
     }
 
     @PutMapping("/{id}")
     public GiftCertificateDto updateById(@PathVariable @Positive long id,
                                          @RequestBody @Valid GiftCertificateUpdateDto updateDto) {
-        return certificateFacade.updateById(id, updateDto);
+        log.info("PUT request to /v1/gift-certificates/{id} with id = {}, updateDto = {}", id, updateDto);
+        GiftCertificateDto certificateDto = certificateFacade.updateById(id, updateDto);
+        log.info("Result = {}", certificateDto);
+        return certificateDto;
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updatePriceById(@PathVariable @Positive long id,
                                 @RequestBody @Valid GiftCertificatePriceUpdateDto priceUpdateDto) {
+        log.info("PATCH request to /v1/gift-certificates/{id} with id = {}, priceUpdateDto = {}", id, priceUpdateDto);
         certificateFacade.updatePriceById(id, priceUpdateDto);
+        log.info("Request has been completed.");
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable @Positive long id) {
+        log.info("DELETE request to /v1/gift-certificates/{id} with id = {}", id);
         certificateFacade.deleteById(id);
+        log.info("Request has been completed.");
     }
 
     private <T> List<T> listOf(T[] array) {

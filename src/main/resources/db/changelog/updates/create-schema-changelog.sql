@@ -36,7 +36,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE orders (
-    id                  BIGSERIAL PRIMARY KEY,
+    id                  BIGINT PRIMARY KEY,
     cost                DECIMAL(7, 2) NOT NULL,
     duration            INT           NOT NULL,
     purchase_date       TIMESTAMP     NOT NULL,
@@ -46,3 +46,8 @@ CREATE TABLE orders (
     FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificate (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
+
+--changeset klioda4:2.1 dbms:postgres
+CREATE SEQUENCE orders_id_seq
+    INCREMENT 3
+    OWNED BY orders.id;

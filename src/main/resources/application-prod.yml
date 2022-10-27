@@ -1,6 +1,5 @@
 spring:
   datasource:
-    url: jdbc:postgresql://11.11.11.11:5432/gift-certificate-db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -10,3 +9,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-main.yml
+
+cluster:
+  nodes:
+    - address: http://cert-node1:8080
+    - address: http://cert-node2:8080
+    - address: http://cert-node3:8080

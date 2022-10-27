@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.controller;
 
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.ecl.dto.request.OrderCreateDto;
+import ru.clevertec.ecl.dto.request.OrderPutDto;
 import ru.clevertec.ecl.dto.response.OrderDto;
 import ru.clevertec.ecl.facade.OrderFacade;
 
@@ -32,19 +35,52 @@ public class OrderController {
     @GetMapping("/user/{userId}")
     public Page<OrderDto> findAllByUserId(@PathVariable @Positive long userId,
                                           Pageable pageable) {
-        log.info("GET request to /v1/orders/user/{userId} with params: userId = {}, pageable = {}", userId, pageable);
-        return orderFacade.findAllByUserId(userId, pageable);
+        log.info("GET request to /v1/orders/user/{userId} with userId = {}, pageable = {}", userId, pageable);
+        Page<OrderDto> ordersPage = orderFacade.findAllByUserId(userId, pageable);
+        log.info("Result: {}", ordersPage);
+        return ordersPage;
+    }
+
+    @GetMapping
+    public List<OrderDto> findAll() {
+        log.info("GET request to /v1/orders");
+        List<OrderDto> orders = orderFacade.findAll();
+        log.info("Result: {}", orders);
+        return orders;
+    }
+
+    @GetMapping("/{id}")
+    public OrderDto findById(@PathVariable @Positive long id) {
+        log.info("GET request to /v1/orders/{id} with id = {}", id);
+        OrderDto order = orderFacade.findById(id);
+        log.info("Result: {}", order);
+        return order;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto create(@RequestBody @Valid OrderCreateDto createDto) {
-        return orderFacade.create(createDto);
+        log.info("POST request to /v1/orders with createDto = {}", createDto);
+        OrderDto order = orderFacade.create(createDto);
+        log.info("Result: {}", order);
+        return order;
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDto updateById(@PathVariable @Positive long id,
+                               @RequestBody OrderPutDto putDto) {
+        log.info("POST request to /v1/orders with id = {}", id);
+        OrderDto order = orderFacade.updateById(id, putDto);
+        log.info("Result: {}", order);
+        return order;
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable @Positive long id) {
+        log.info("DELETE request to /v1/orders/{id} with id = {}", id);
         orderFacade.deleteById(id);
+        log.info("Request has been completed.");
     }
 }
