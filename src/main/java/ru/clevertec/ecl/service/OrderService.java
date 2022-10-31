@@ -9,8 +9,6 @@ public interface OrderService {
 
     Page<Order> findAllByUserId(long userId, Pageable pageable);
 
-    Order findMostRecentByUserId(long userId);
-
     Order create(OrderCreateDto createDto);
 
     void deleteById(long id);

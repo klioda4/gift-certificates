@@ -1,7 +1,6 @@
 package ru.clevertec.ecl.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.dto.request.OrderCreateDto;
-import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.model.GiftCertificate;
 import ru.clevertec.ecl.model.Order;
 import ru.clevertec.ecl.model.User;
@@ -60,28 +58,6 @@ class OrderServiceImplTest {
         List<Order> actualOrders = resultOrderPage.toList();
         List<Order> expectedOrders = getListOfSingleOrder();
         assertEquals(expectedOrders, actualOrders);
-    }
-
-    @Test
-    void givenUserId_whenFindMostRecentByUserId_thenReturnExpectedOrder() {
-        long givenUserId = 1;
-        when(orderRepository.findFirstByUserIdOrderByPurchaseDateDesc(givenUserId))
-            .thenReturn(Optional.of(getOrder()));
-
-        Order actualOrder = orderService.findMostRecentByUserId(givenUserId);
-
-        Order expectedOrder = getOrder();
-        assertEquals(expectedOrder, actualOrder);
-    }
-
-    @Test
-    void givenNotExistingId_whenFindMostRecentByUserId_thenThrowEntityNotFoundException() {
-        long givenIncorrectId = 1;
-        when(orderRepository.findFirstByUserIdOrderByPurchaseDateDesc(givenIncorrectId))
-            .thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class,
-                     () -> orderService.findMostRecentByUserId(givenIncorrectId));
     }
 
     @Test

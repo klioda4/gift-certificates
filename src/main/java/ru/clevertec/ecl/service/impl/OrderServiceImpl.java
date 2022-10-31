@@ -35,12 +35,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findMostRecentByUserId(long userId) {
-        return orderRepository.findFirstByUserIdOrderByPurchaseDateDesc(userId)
-            .orElseThrow(() -> new EntityNotFoundException(ORDER_ENTITY_NAME, "user.id", userId));
-    }
-
-    @Override
     @Transactional
     public Order create(OrderCreateDto createDto) {
         User user = userService.findById(createDto.getUserId());

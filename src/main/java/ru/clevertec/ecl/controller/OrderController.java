@@ -36,11 +36,6 @@ public class OrderController {
         return orderFacade.findAllByUserId(userId, pageable);
     }
 
-    @GetMapping("/user/{userId}/latest")
-    public OrderDto findMostRecentByUserId(@PathVariable @Positive long userId) {
-        return orderFacade.findMostRecentByUserId(userId);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto create(@RequestBody @Valid OrderCreateDto createDto) {

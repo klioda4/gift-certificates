@@ -24,12 +24,6 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     @Override
-    public OrderDto findMostRecentByUserId(long userId) {
-        return orderMapper.mapToDto(
-            orderService.findMostRecentByUserId(userId));
-    }
-
-    @Override
     public OrderDto create(OrderCreateDto createDto) {
         return orderMapper.mapToDto(
             orderService.create(createDto));

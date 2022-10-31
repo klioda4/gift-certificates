@@ -9,8 +9,6 @@ public interface OrderFacade {
 
     Page<OrderDto> findAllByUserId(long userId, Pageable pageable);
 
-    OrderDto findMostRecentByUserId(long userId);
-
     OrderDto create(OrderCreateDto createDto);
 
     void deleteById(long id);
