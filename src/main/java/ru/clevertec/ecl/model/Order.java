@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +17,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import ru.clevertec.ecl.model.entityGraph.EntityGraphNames;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@NamedEntityGraph(
+    name = EntityGraphNames.ORDER_WITH_CERTIFICATE,
+    attributeNodes = @NamedAttributeNode(Order_.GIFT_CERTIFICATE))
 @Table(name = "orders")
 public class Order {
 

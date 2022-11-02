@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/gift-certificate-db
+#    url: jdbc:postgresql://localhost:5432/gift-certificate-db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -12,3 +12,9 @@ spring:
         format_sql: true
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-local-postgres.yml
+
+cluster:
+  nodes:
+    - address: http://localhost:8000
+    - address: http://localhost:8001
+    - address: http://localhost:8002

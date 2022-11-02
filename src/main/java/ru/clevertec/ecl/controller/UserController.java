@@ -1,9 +1,12 @@
 package ru.clevertec.ecl.controller;
 
+import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,18 +18,19 @@ import ru.clevertec.ecl.facade.UserFacade;
 @Slf4j
 @RestController
 @RequestMapping("/v1/users")
+@Validated
 public class UserController {
 
     private final UserFacade userFacade;
 
     @GetMapping
-    public Page<UserDto> findAll(Pageable pageable) {
+    public ResponseEntity<Page<UserDto>> findAll(Pageable pageable) {
         log.info("GET request to /v1/users with params: pageable = {}", pageable);
-        return userFacade.findAll(pageable);
+        return ResponseEntity.ok(userFacade.findAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public UserDto findById(@PathVariable long id) {
-        return userFacade.findById(id);
+    public ResponseEntity<UserDto> findById(@PathVariable @Positive long id) {
+        return ResponseEntity.ok(userFacade.findById(id));
     }
 }

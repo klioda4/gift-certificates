@@ -1,9 +1,7 @@
 package ru.clevertec.ecl.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +26,5 @@ class OrderRepositoryTest {
 
         int expectedNumberOfOrders = 2;
         assertEquals(expectedNumberOfOrders, actualOrderPage.getNumberOfElements());
-    }
-
-    @Test
-    void givenUserId_whenFindFirstByUserIdOrderByPurchaseDateDesc_thenReturnOrderWithExpectedId() {
-        long givenUserId = 1;
-
-        Optional<Order> actualOrder = orderRepository.findFirstByUserIdOrderByPurchaseDateDesc(givenUserId);
-
-        Long expectedOrderId = 2L;
-        assertTrue(actualOrder.isPresent(), "Order is not found");
-        assertEquals(expectedOrderId, actualOrder.get().getId(), "Id of the returned Order is incorrect");
     }
 }

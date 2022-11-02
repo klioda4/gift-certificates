@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+  cert-node1: &node
+    build: ./
+    container_name: 'cert-node1'
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node1:5432/gift-certificate-db
+    ports:
+      - '8000:8080'
+    depends_on:
+      - db-cert-node1
+    networks:
+      - cluster-network
+
+  cert-node2:
+    <<: *node
+    container_name: 'cert-node2'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node2:5432/gift-certificate-db
+    ports:
+      - '8001:8080'
+    depends_on:
+      - db-cert-node2
+
+  cert-node3:
+    <<: *node
+    container_name: 'cert-node3'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node3:5432/gift-certificate-db
+    ports:
+      - '8002:8080'
+    depends_on:
+      - db-cert-node3
+
+  db-cert-node1: &db
+    image: postgres:15.0
+    container_name: 'db-cert-node1'
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gift-certificate-db
+    ports:
+      - '5440:5432'
+    networks:
+      - cluster-network
+
+  db-cert-node2:
+    <<: *db
+    container_name: 'db-cert-node2'
+    ports:
+      - '5441:5432'
+
+  db-cert-node3:
+    <<: *db
+    container_name: 'db-cert-node3'
+    ports:
+      - '5442:5432'
+
+networks:
+  cluster-network:
+    driver: bridge
+    name: cluster-network

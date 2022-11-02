@@ -1,6 +1,6 @@
 package ru.clevertec.ecl.dto.request;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Value;
 
@@ -8,9 +8,9 @@ import lombok.Value;
 @Builder
 public class OrderCreateDto {
 
-    @NotNull
+    @Positive
     Long userId;
 
-    @NotNull
+    @Positive
     Long giftCertificateId;
 }
