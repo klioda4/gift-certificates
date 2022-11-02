@@ -5,13 +5,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import ru.clevertec.ecl.cluster.request.CachedHttpServletRequest;
 import ru.clevertec.ecl.cluster.handler.OrderRequestHandler;
+import ru.clevertec.ecl.cluster.request.CachedHttpServletRequest;
 import ru.clevertec.ecl.cluster.util.RequestCheckHelper;
-import ru.clevertec.ecl.cluster.util.requestQualify.OrderRequestTypeQualifier;
-import ru.clevertec.ecl.cluster.util.requestQualify.OrderRequestTypeQualifier.OrderRequestType;
+import ru.clevertec.ecl.cluster.util.RequestPathParser;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,28 +30,29 @@ public class OrderInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        String servletPath = request.getServletPath();
+        HttpMethod httpMethod = HttpMethod.valueOf(request.getMethod());
         CachedHttpServletRequest cachedRequest = (CachedHttpServletRequest) request;
-        OrderRequestType orderRequestType = OrderRequestTypeQualifier.getRequestType(request);
-        log.debug("Request is {}", orderRequestType);
-        switch (orderRequestType) {
-            case GET_BY_ID:
-                return orderRequestHandler.doGetById(cachedRequest, response);
+        if (httpMethod == HttpMethod.GET && RequestPathParser.isRequestById(servletPath)) {
+            return orderRequestHandler.doGetById(cachedRequest, response);
 
-            case GET_ALL:
-                orderRequestHandler.doGetAll(cachedRequest, response);
-                return false;
+        } else if (((httpMethod == HttpMethod.PUT) || (httpMethod == HttpMethod.PATCH))
+                       && RequestPathParser.isRequestById(servletPath)) {
+            return orderRequestHandler.doUpdateById(cachedRequest, response);
 
-            case UPDATE_BY_ID:
-                return orderRequestHandler.doUpdateById(cachedRequest, response);
+        } else if ((httpMethod == HttpMethod.GET) && (RequestPathParser.isRequestToAll(servletPath)
+                                                          || RequestPathParser.isGetAllOrdersByUserId(servletPath))) {
+            orderRequestHandler.doGetAll(cachedRequest, response);
+            return false;
 
-            case CREATE:
-                return orderRequestHandler.doCreate(cachedRequest, response);
+        } else if ((httpMethod == HttpMethod.POST) && RequestPathParser.isRequestToAll(servletPath)) {
+            return orderRequestHandler.doCreate(cachedRequest, response);
 
-            case DELETE:
-                return orderRequestHandler.doDelete(cachedRequest, response);
+        } else if ((httpMethod == HttpMethod.DELETE) && RequestPathParser.isRequestById(servletPath)) {
+            return orderRequestHandler.doDelete(cachedRequest, response);
 
-            default:
-                throw new UnsupportedOperationException("Unknown operation to orders");
+        } else {
+            throw new UnsupportedOperationException("Unknown operation to orders");
         }
     }
 }

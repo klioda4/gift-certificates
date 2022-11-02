@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,54 +34,54 @@ public class OrderController {
     private final OrderFacade orderFacade;
 
     @GetMapping("/user/{userId}")
-    public Page<OrderDto> findAllByUserId(@PathVariable @Positive long userId,
-                                          Pageable pageable) {
+    public ResponseEntity<Page<OrderDto>> findAllByUserId(@PathVariable @Positive long userId,
+                                                          Pageable pageable) {
         log.info("GET request to /v1/orders/user/{userId} with userId = {}, pageable = {}", userId, pageable);
         Page<OrderDto> ordersPage = orderFacade.findAllByUserId(userId, pageable);
         log.info("Result: {}", ordersPage);
-        return ordersPage;
+        return ResponseEntity.ok(ordersPage);
     }
 
     @GetMapping
-    public List<OrderDto> findAll() {
+    public ResponseEntity<List<OrderDto>> findAll() {
         log.info("GET request to /v1/orders");
         List<OrderDto> orders = orderFacade.findAll();
         log.info("Result: {}", orders);
-        return orders;
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}")
-    public OrderDto findById(@PathVariable @Positive long id) {
+    public ResponseEntity<OrderDto> findById(@PathVariable @Positive long id) {
         log.info("GET request to /v1/orders/{id} with id = {}", id);
         OrderDto order = orderFacade.findById(id);
         log.info("Result: {}", order);
-        return order;
+        return ResponseEntity.ok(order);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto create(@RequestBody @Valid OrderCreateDto createDto) {
+    public ResponseEntity<OrderDto> create(@RequestBody @Valid OrderCreateDto createDto) {
         log.info("POST request to /v1/orders with createDto = {}", createDto);
         OrderDto order = orderFacade.create(createDto);
         log.info("Result: {}", order);
-        return order;
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto updateById(@PathVariable @Positive long id,
-                               @RequestBody OrderPutDto putDto) {
+    public ResponseEntity<OrderDto> updateById(@PathVariable @Positive long id,
+                                               @RequestBody OrderPutDto putDto) {
         log.info("POST request to /v1/orders with id = {}", id);
         OrderDto order = orderFacade.updateById(id, putDto);
         log.info("Result: {}", order);
-        return order;
+        return ResponseEntity.ok(order);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable @Positive long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Positive long id) {
         log.info("DELETE request to /v1/orders/{id} with id = {}", id);
         orderFacade.deleteById(id);
         log.info("Request has been completed.");
+        return ResponseEntity.noContent().build();
     }
 }

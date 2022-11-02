@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,13 +24,13 @@ public class UserController {
     private final UserFacade userFacade;
 
     @GetMapping
-    public Page<UserDto> findAll(Pageable pageable) {
+    public ResponseEntity<Page<UserDto>> findAll(Pageable pageable) {
         log.info("GET request to /v1/users with params: pageable = {}", pageable);
-        return userFacade.findAll(pageable);
+        return ResponseEntity.ok(userFacade.findAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public UserDto findById(@PathVariable @Positive long id) {
-        return userFacade.findById(id);
+    public ResponseEntity<UserDto> findById(@PathVariable @Positive long id) {
+        return ResponseEntity.ok(userFacade.findById(id));
     }
 }

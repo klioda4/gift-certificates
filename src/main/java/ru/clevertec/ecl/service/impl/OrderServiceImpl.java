@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> findAll() {
         return orderRepository.findAll(Pageable.unpaged(),
                                        NamedEntityGraph.fetching(EntityGraphNames.ORDER_WITH_CERTIFICATE))
-            .toList();
+                   .toList();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(long id) {
         return orderRepository.findById(id, NamedEntityGraph.fetching(EntityGraphNames.ORDER_WITH_CERTIFICATE))
-            .orElseThrow(() -> new EntityNotFoundException(ORDER_ENTITY_NAME, Order_.ID, id));
+                   .orElseThrow(() -> new EntityNotFoundException(ORDER_ENTITY_NAME, Order_.ID, id));
     }
 
     @Override
@@ -70,8 +70,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void deleteById(long id) {
-        orderRepository.delete(
-            orderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ORDER_ENTITY_NAME, Order_.ID, id)));
+        Order order = orderRepository.findById(id)
+                          .orElseThrow(() -> new EntityNotFoundException(ORDER_ENTITY_NAME, Order_.ID, id));
+        orderRepository.delete(order);
     }
 }
