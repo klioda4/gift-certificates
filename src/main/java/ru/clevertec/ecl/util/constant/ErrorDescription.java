@@ -18,7 +18,7 @@ public enum ErrorDescription {
     UNHANDLED_SERVER_ERROR(500, 50001, "Unhandled server error, try to request later or contact support"),
     DATABASE_ERROR(500, 50002, "Database problem, try to request later or contact support"),
     NODE_CONNECTION_ERROR(500, 50003, "One of required servers is currently unavailable, try to request later or "
-        + "contact support");
+                                          + "contact support");
 
     private final int statusCode;
     private final int errorCode;

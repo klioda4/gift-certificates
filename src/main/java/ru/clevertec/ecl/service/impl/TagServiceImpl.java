@@ -35,7 +35,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag findById(long id) {
         return tagRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(TAG_ENTITY_NAME, Tag_.ID, id));
+                   .orElseThrow(() -> new EntityNotFoundException(TAG_ENTITY_NAME, Tag_.ID, id));
     }
 
     @Override
@@ -78,9 +78,9 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public Tag findOrCreateByName(String name) {
         return tagRepository.findByName(name)
-            .orElseGet(() -> tagRepository.save(Tag.builder()
-                                                    .name(name)
-                                                    .build()));
+                   .orElseGet(() -> tagRepository.save(Tag.builder()
+                                                           .name(name)
+                                                           .build()));
     }
 
     private IntegrityViolationException createTagIntegrityViolationException(String tagName) {

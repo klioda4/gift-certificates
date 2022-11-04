@@ -20,19 +20,19 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-            .groupName("public-api")
-            .apiInfo(apiInfo())
-            .directModelSubstitute(Pageable.class, PageableRequestDescription.class)
-            .select()
-            .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-            .paths(PathSelectors.any())
-            .build();
+                   .groupName("public-api")
+                   .apiInfo(apiInfo())
+                   .directModelSubstitute(Pageable.class, PageableRequestDescription.class)
+                   .select()
+                   .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+                   .paths(PathSelectors.any())
+                   .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("Gift certificates")
-            .description("Service to manage certificates")
-            .build();
+                   .title("Gift certificates")
+                   .description("Service to manage certificates")
+                   .build();
     }
 }

@@ -23,11 +23,11 @@ public class RequestSenderImpl implements RequestSender {
     public ResponseEntity<List<Object>> forwardGetAll(HttpServletRequest request, Node nodeToForward) {
         log.debug("Forward request to {}", nodeToForward);
         return getWebClient(nodeToForward.getAddress())
-            .get()
-            .uri(getUriWithParameters(request))
-            .retrieve()
-            .toEntityList(Object.class)
-            .block();
+                   .get()
+                   .uri(getUriWithParameters(request))
+                   .retrieve()
+                   .toEntityList(Object.class)
+                   .block();
     }
 
     @Override
@@ -40,30 +40,30 @@ public class RequestSenderImpl implements RequestSender {
 
     private ResponseEntity<String> forwardRequestWithBody(CachedHttpServletRequest request, Node nodeToForward) {
         return getWebClient(nodeToForward.getAddress())
-            .method(HttpMethod.valueOf(request.getMethod()))
-            .uri(getUriWithParameters(request))
-            .bodyValue(request.getBody())
-            .retrieve()
-            .toEntity(String.class)
-            .block();
+                   .method(HttpMethod.valueOf(request.getMethod()))
+                   .uri(getUriWithParameters(request))
+                   .bodyValue(request.getBody())
+                   .retrieve()
+                   .toEntity(String.class)
+                   .block();
     }
 
     private ResponseEntity<String> forwardRequestWithoutBody(HttpServletRequest request, Node nodeToForward) {
         return getWebClient(nodeToForward.getAddress())
-            .method(HttpMethod.valueOf(request.getMethod()))
-            .uri(getUriWithParameters(request))
-            .retrieve()
-            .toEntity(String.class)
-            .block();
+                   .method(HttpMethod.valueOf(request.getMethod()))
+                   .uri(getUriWithParameters(request))
+                   .retrieve()
+                   .toEntity(String.class)
+                   .block();
     }
 
     protected final WebClient getWebClient(String baseUrl) {
         return WebClient.builder()
-            .baseUrl(baseUrl)
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .defaultHeader(HttpHeaders.CONTENT_ENCODING, AppConstants.ENCODING)
-            .defaultHeader(InterceptorConstants.FORWARDED_ATTRIBUTE, Boolean.toString(true))
-            .build();
+                   .baseUrl(baseUrl)
+                   .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                   .defaultHeader(HttpHeaders.CONTENT_ENCODING, AppConstants.ENCODING)
+                   .defaultHeader(InterceptorConstants.FORWARDED_ATTRIBUTE, Boolean.toString(true))
+                   .build();
     }
 
     protected final String getUriWithParameters(HttpServletRequest request) {

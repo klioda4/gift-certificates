@@ -21,7 +21,7 @@ public class TagFacadeImpl implements TagFacade {
     @Override
     public Page<TagDto> findAll(Pageable pageable) {
         return tagService.findAll(pageable)
-            .map(tagMapper::mapToDto);
+                   .map(tagMapper::mapToDto);
     }
 
     @Override

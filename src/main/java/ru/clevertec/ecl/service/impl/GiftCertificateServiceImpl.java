@@ -41,8 +41,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public Page<GiftCertificate> findAllByNameAndDescription(String nameSample, String descriptionSample,
                                                              Pageable pageable) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
-            .withMatcher(GiftCertificate_.NAME, GenericPropertyMatchers.contains().ignoreCase())
-            .withMatcher(GiftCertificate_.DESCRIPTION, GenericPropertyMatchers.contains().ignoreCase());
+                                            .withMatcher(GiftCertificate_.NAME,
+                                                         GenericPropertyMatchers.contains().ignoreCase())
+                                            .withMatcher(GiftCertificate_.DESCRIPTION,
+                                                         GenericPropertyMatchers.contains().ignoreCase());
         GiftCertificate certificateExample = createCertificateExample(nameSample, descriptionSample);
         return certificateRepository.findAll(Example.of(certificateExample, exampleMatcher),
                                              pageable,
@@ -61,13 +63,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificate findById(long id) {
         return certificateRepository.findById(id, NamedEntityGraph.fetching(EntityGraphNames.CERTIFICATE_WITH_TAGS))
-            .orElseThrow(() -> new EntityNotFoundException(CERTIFICATE_ENTITY_NAME, GiftCertificate_.ID, id));
+                   .orElseThrow(() -> new EntityNotFoundException(CERTIFICATE_ENTITY_NAME, GiftCertificate_.ID, id));
     }
 
     @Override
     public GiftCertificate findByIdLazy(long id) {
         return certificateRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(CERTIFICATE_ENTITY_NAME, GiftCertificate_.ID, id));
+                   .orElseThrow(() -> new EntityNotFoundException(CERTIFICATE_ENTITY_NAME, GiftCertificate_.ID, id));
     }
 
     @Override
@@ -106,8 +108,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private List<Tag> findOrCreateTags(List<String> tagNames) {
         return tagNames.stream()
-            .map(tagService::findOrCreateByName)
-            .collect(toList());
+                   .map(tagService::findOrCreateByName)
+                   .collect(toList());
     }
 
     private void updateTagsIfPresent(GiftCertificate certificate, List<String> tagNames) {
@@ -120,8 +122,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private GiftCertificate createCertificateExample(String name, String description) {
         return GiftCertificate.builder()
-            .name(name)
-            .description(description)
-            .build();
+                   .name(name)
+                   .description(description)
+                   .build();
     }
 }

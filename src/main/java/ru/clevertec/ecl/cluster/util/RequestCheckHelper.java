@@ -11,14 +11,14 @@ public class RequestCheckHelper {
     public boolean isForwarded(HttpServletRequest request) {
         String isForwardedHeader = request.getHeader(InterceptorConstants.FORWARDED_ATTRIBUTE);
         return Optional.ofNullable(isForwardedHeader)
-            .map(Boolean::parseBoolean)
-            .orElse(false);
+                   .map(Boolean::parseBoolean)
+                   .orElse(false);
     }
 
     public boolean doesNeedToDistribute(HttpServletRequest request) {
         Boolean needToDistributeAttribute = (Boolean) request.getAttribute(
             InterceptorConstants.NEED_TO_DISTRIBUTE_ATTRIBUTE);
         return Optional.ofNullable(needToDistributeAttribute)
-            .orElse(false);
+                   .orElse(false);
     }
 }

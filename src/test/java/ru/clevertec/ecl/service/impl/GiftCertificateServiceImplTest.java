@@ -172,8 +172,8 @@ class GiftCertificateServiceImplTest {
     @Test
     void givenCreateDtoWithTags_whenCreate_thenReturnGiftCertificateWithExpectedTags() {
         GiftCertificateCreateDto givenCreateDto = GiftCertificateCreateDto.builder()
-            .tagNames(Collections.singletonList("default-tag"))
-            .build();
+                                                      .tagNames(Collections.singletonList("default-tag"))
+                                                      .build();
         StubHelper.stubRepositorySave(certificateRepository);
         stubTagServiceFindOrCreateByName();
         when(certificateMapper.mapCreationDtoToEntity(givenCreateDto))
@@ -205,8 +205,8 @@ class GiftCertificateServiceImplTest {
     void givenIdAndUpdateDtoWithTagNames_whenUpdateById_thenUpdateTagsInGiftCertificate() {
         long givenId = 1;
         GiftCertificateUpdateDto givenUpdateDto = GiftCertificateUpdateDto.builder()
-            .tagNames(Collections.singletonList("default-tag"))
-            .build();
+                                                      .tagNames(Collections.singletonList("default-tag"))
+                                                      .build();
         stubRepositoryFindByIdWithEntityGraph(givenId);
         stubTagServiceFindOrCreateByName();
         StubHelper.stubRepositorySave(certificateRepository);
@@ -223,9 +223,9 @@ class GiftCertificateServiceImplTest {
         GiftCertificatePriceUpdateDto givenPriceUpdateDto = new GiftCertificatePriceUpdateDto(BigDecimal.TEN);
         GiftCertificate initialCertificate = GiftCertificate.builder().id(givenId).build();
         GiftCertificate updatedCertificate = GiftCertificate.builder()
-            .id(givenId)
-            .price(BigDecimal.TEN)
-            .build();
+                                                 .id(givenId)
+                                                 .price(BigDecimal.TEN)
+                                                 .build();
         when(certificateRepository.findById(givenId))
             .thenReturn(Optional.of(initialCertificate));
         when(certificateRepository.save(updatedCertificate))

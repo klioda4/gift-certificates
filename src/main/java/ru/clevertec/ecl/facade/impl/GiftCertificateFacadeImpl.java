@@ -24,13 +24,13 @@ public class GiftCertificateFacadeImpl implements GiftCertificateFacade {
     public Page<GiftCertificateDto> findAllByNameAndDescription(String nameSample, String descriptionSample,
                                                                 Pageable pageable) {
         return certificateService.findAllByNameAndDescription(nameSample, descriptionSample, pageable)
-            .map(certificateMapper::mapToDto);
+                   .map(certificateMapper::mapToDto);
     }
 
     @Override
     public Page<GiftCertificateDto> findAllByTagNames(List<String> tagNames, Pageable pageable) {
         return certificateService.findAllByTagNames(tagNames, pageable)
-            .map(certificateMapper::mapToDto);
+                   .map(certificateMapper::mapToDto);
     }
 
     @Override

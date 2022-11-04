@@ -13,10 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import ru.clevertec.ecl.cluster.handler.OrderRequestHandler;
 import ru.clevertec.ecl.cluster.nodeInfo.Node;
 import ru.clevertec.ecl.cluster.nodeInfo.NodesInfo;
 import ru.clevertec.ecl.cluster.request.CachedHttpServletRequest;
-import ru.clevertec.ecl.cluster.handler.OrderRequestHandler;
 import ru.clevertec.ecl.cluster.util.IndexCarousel;
 import ru.clevertec.ecl.cluster.util.RequestPathParser;
 import ru.clevertec.ecl.cluster.util.sender.RequestSender;
@@ -58,15 +58,16 @@ public class OrderRequestHandlerImpl implements OrderRequestHandler {
     @Override
     public void doGetAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<Object> allEntities = nodes.stream()
-            .map(node -> requestSender.forwardGetAll(request, node))
-            .map(responseEntity -> Optional.ofNullable(responseEntity.getBody()))
-            .map(optionalBody -> optionalBody
-                .orElseThrow(() -> new IllegalStateException("Get all response isn't acquired")))
-            .reduce(new ArrayList<>(),
-                    (list1, list2) -> {
-                        list1.addAll(list2);
-                        return list1;
-                    });
+                                       .map(node -> requestSender.forwardGetAll(request, node))
+                                       .map(responseEntity -> Optional.ofNullable(responseEntity.getBody()))
+                                       .map(optionalBody -> optionalBody
+                                                                .orElseThrow(() -> new IllegalStateException(
+                                                                    "Get all response isn't acquired")))
+                                       .reduce(new ArrayList<>(),
+                                               (list1, list2) -> {
+                                                   list1.addAll(list2);
+                                                   return list1;
+                                               });
         ResponseEntity<String> responseEntity = new ResponseEntity<>(new Gson().toJson(allEntities),
                                                                      HttpStatus.OK);
         writeResponse(responseEntity, response);

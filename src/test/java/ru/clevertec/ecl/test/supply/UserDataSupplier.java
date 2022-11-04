@@ -12,16 +12,16 @@ public class UserDataSupplier {
 
     public static User getUser() {
         return User.builder()
-            .id(DEFAULT_ID)
-            .name(DEFAULT_NAME)
-            .build();
+                   .id(DEFAULT_ID)
+                   .name(DEFAULT_NAME)
+                   .build();
     }
 
     public static UserDto getUserDto() {
         return UserDto.builder()
-            .id(DEFAULT_ID)
-            .name(DEFAULT_NAME)
-            .build();
+                   .id(DEFAULT_ID)
+                   .name(DEFAULT_NAME)
+                   .build();
     }
 
     public static List<User> getListOfSingleUser() {
