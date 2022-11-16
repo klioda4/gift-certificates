@@ -45,6 +45,7 @@ public class GiftCertificateDataSupplier {
 
     public static GiftCertificateCreateDto getGiftCertificateCreateDto() {
         return GiftCertificateCreateDto.builder()
+                   .id(DEFAULT_ID)
                    .name(DEFAULT_NAME)
                    .description(DEFAULT_DESCRIPTION)
                    .price(DEFAULT_PRICE)
@@ -62,6 +63,7 @@ public class GiftCertificateDataSupplier {
 
     public static GiftCertificate getGiftCertificateMappedFromCreateDto() {
         return GiftCertificate.builder()
+                   .id(DEFAULT_ID)
                    .name(DEFAULT_NAME)
                    .description(DEFAULT_DESCRIPTION)
                    .price(DEFAULT_PRICE)

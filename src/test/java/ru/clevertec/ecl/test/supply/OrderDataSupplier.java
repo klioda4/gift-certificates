@@ -27,6 +27,7 @@ public class OrderDataSupplier {
 
     public static Order getOrderMappedFromCreateOrder(LocalDateTime purchaseDate) {
         return Order.builder()
+                   .id(DEFAULT_ID)
                    .cost(DEFAULT_COST)
                    .duration(DEFAULT_DURATION)
                    .purchaseDate(purchaseDate)
@@ -51,6 +52,7 @@ public class OrderDataSupplier {
 
     public static OrderCreateDto getOrderCreateDto() {
         return OrderCreateDto.builder()
+                   .id(DEFAULT_ID)
                    .userId(1L)
                    .giftCertificateId(1L)
                    .build();

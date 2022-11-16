@@ -271,7 +271,7 @@ class GiftCertificateServiceImplTest {
     }
 
     private void stubTagServiceFindOrCreateByName() {
-        when(tagService.findOrCreateByName("default-tag"))
+        when(tagService.findByName("default-tag"))
             .thenReturn(getTag());
     }
 }
