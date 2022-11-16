@@ -1,7 +1,5 @@
 spring:
   datasource:
-    username: postgres
-    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:
@@ -11,7 +9,16 @@ spring:
     change-log: classpath:/db/changelog/db.changelog-main.yml
 
 cluster:
-  nodes:
-    - address: http://cert-node1:8080
-    - address: http://cert-node2:8080
-    - address: http://cert-node3:8080
+  shards:
+    - - cert-node11:8080
+      - cert-node12:8080
+      - cert-node13:8080
+
+    - - cert-node21:8080
+      - cert-node22:8080
+      - cert-node23:8080
+
+    - - cert-node31:8080
+      - cert-node32:8080
+      - cert-node33:8080
+  url-prefix: http://

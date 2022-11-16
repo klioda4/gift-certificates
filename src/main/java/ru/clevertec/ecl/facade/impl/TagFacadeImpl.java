@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import ru.clevertec.ecl.dto.request.TagCreateDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.dto.response.TagOfUserDto;
@@ -21,7 +22,7 @@ public class TagFacadeImpl implements TagFacade {
     @Override
     public Page<TagDto> findAll(Pageable pageable) {
         return tagService.findAll(pageable)
-            .map(tagMapper::mapToDto);
+                   .map(tagMapper::mapToDto);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class TagFacadeImpl implements TagFacade {
     }
 
     @Override
-    public TagDto create(TagPutDto newTagDto) {
+    public TagDto create(TagCreateDto newTagDto) {
         return tagMapper.mapToDto(
             tagService.create(newTagDto));
     }

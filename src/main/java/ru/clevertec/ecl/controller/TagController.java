@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.clevertec.ecl.dto.request.TagCreateDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.dto.response.TagOfUserDto;
@@ -50,8 +51,11 @@ public class TagController {
     }
 
     @PostMapping
-    public ResponseEntity<TagDto> create(@RequestBody @Valid TagPutDto newTag) {
-        return new ResponseEntity<>(tagFacade.create(newTag), HttpStatus.CREATED);
+    public ResponseEntity<TagDto> create(@RequestBody @Valid TagCreateDto createDto) {
+        log.info("POST request to /v1/tags with createDto = {}", createDto);
+        TagDto tagDto = tagFacade.create(createDto);
+        log.info("Result = {}", tagDto);
+        return new ResponseEntity<>(tagDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

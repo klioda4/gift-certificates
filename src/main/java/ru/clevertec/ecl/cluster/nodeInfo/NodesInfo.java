@@ -1,17 +1,13 @@
 package ru.clevertec.ecl.cluster.nodeInfo;
 
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.Value;
 
-@Getter
-@Setter
-@ConfigurationProperties(prefix = "cluster")
+@Value
 public class NodesInfo {
 
-    private List<Node> nodes;
+    List<List<Node>> shards;
 
-    // TODO: make camelCase
-    private int currentnodeindex;
+    int currentShardIndex;
+    Node currentNode;
 }

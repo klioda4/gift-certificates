@@ -2,13 +2,12 @@ package ru.clevertec.ecl.util.mapping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTag;
+import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTagCreateDto;
 import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTagDto;
-import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTagMappedFromPutDto;
-import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTagPutDto;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import ru.clevertec.ecl.dto.request.TagPutDto;
+import ru.clevertec.ecl.dto.request.TagCreateDto;
 import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.model.Tag;
 
@@ -27,12 +26,12 @@ class TagDtoMapperTest {
     }
 
     @Test
-    void givenTagPutDto_whenMapPutDtoToEntity_thenReturnExpectedTag() {
-        TagPutDto givenPutDto = getTagPutDto();
+    void givenTagDto_whenMapToTag_thenReturnExpectedTag() {
+        TagCreateDto givenTagCreateDto = getTagCreateDto();
 
-        Tag actualTag = tagMapper.mapPutDtoToEntity(givenPutDto);
+        Tag actualTag = tagMapper.mapToTag(givenTagCreateDto);
 
-        Tag expectedTag = getTagMappedFromPutDto();
+        Tag expectedTag = getTag();
         assertEquals(expectedTag, actualTag);
     }
 }

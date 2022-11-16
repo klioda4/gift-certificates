@@ -2,7 +2,9 @@ package ru.clevertec.ecl.util.mapping;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import ru.clevertec.ecl.dto.request.TagCreateDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.dto.response.TagOfUserDto;
@@ -14,8 +16,10 @@ public interface TagDtoMapper {
 
     TagDto mapToDto(Tag tag);
 
+    Tag mapToTag(TagCreateDto putDto);
+
     @Mapping(target = "id", ignore = true)
-    Tag mapPutDtoToEntity(TagPutDto putDto);
+    void updateTag(@MappingTarget Tag target, TagPutDto putDto);
 
     @Mapping(target = "tag", source = "tagOfUser", qualifiedByName = "createTagDto")
     TagOfUserDto mapToDto(TagOfUser tagOfUser);

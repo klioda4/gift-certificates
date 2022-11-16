@@ -8,17 +8,20 @@ import ru.clevertec.ecl.cluster.nodeInfo.InterceptorConstants;
 @UtilityClass
 public class RequestCheckHelper {
 
-    public boolean isForwarded(HttpServletRequest request) {
-        String isForwardedHeader = request.getHeader(InterceptorConstants.FORWARDED_ATTRIBUTE);
-        return Optional.ofNullable(isForwardedHeader)
-            .map(Boolean::parseBoolean)
-            .orElse(false);
+    public boolean needToSkipHandling(HttpServletRequest request) {
+        String needToSkipHandling = request.getHeader(InterceptorConstants.SKIP_HANDLING_ATTRIBUTE);
+        return Optional.ofNullable(needToSkipHandling)
+                   .map(Boolean::parseBoolean)
+                   .orElse(false);
     }
 
-    public boolean doesNeedToDistribute(HttpServletRequest request) {
-        Boolean needToDistributeAttribute = (Boolean) request.getAttribute(
-            InterceptorConstants.NEED_TO_DISTRIBUTE_ATTRIBUTE);
-        return Optional.ofNullable(needToDistributeAttribute)
-            .orElse(false);
+    public boolean isInterceptorRequest(HttpServletRequest request) {
+        Object isInterceptorRequest = request.getAttribute(InterceptorConstants.IS_INTERCEPTOR_REQUEST_ATTRIBUTE);
+        return Boolean.TRUE.equals(isInterceptorRequest);
+    }
+
+    public Optional<Long> getCommitLogId(HttpServletRequest request) {
+        Long commitLogId = (Long) request.getAttribute(InterceptorConstants.COMMIT_LOG_ID_ATTRIBUTE);
+        return Optional.ofNullable(commitLogId);
     }
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import ru.clevertec.ecl.dto.request.OrderCreateDto;
 import ru.clevertec.ecl.dto.response.OrderDto;
 import ru.clevertec.ecl.model.GiftCertificate;
 import ru.clevertec.ecl.model.Order;
@@ -29,10 +30,11 @@ class OrderDtoMapperTest {
 
     @Test
     void givenUserAndCertificate_whenCreateOrder_thenReturnExpectedOrder() {
+        OrderCreateDto givenCreateDto = OrderDataSupplier.getOrderCreateDto();
         User givenUser = UserDataSupplier.getUser();
         GiftCertificate givenCertificate = GiftCertificateDataSupplier.getGiftCertificate();
 
-        Order actualOrder = orderMapper.createOrder(givenUser, givenCertificate);
+        Order actualOrder = orderMapper.mapToOrder(givenCreateDto, givenUser, givenCertificate);
 
         Order expectedOrder = OrderDataSupplier.getOrderMappedFromCreateOrder(actualOrder.getPurchaseDate());
         assertEquals(expectedOrder, actualOrder);
@@ -40,10 +42,11 @@ class OrderDtoMapperTest {
 
     @Test
     void givenUserAndCertificate_whenCreateOrder_thenReturnOrderWithGivenReferences() {
+        OrderCreateDto givenCreateDto = OrderDataSupplier.getOrderCreateDto();
         User givenUser = UserDataSupplier.getUser();
         GiftCertificate givenCertificate = GiftCertificateDataSupplier.getGiftCertificate();
 
-        Order resultOrder = orderMapper.createOrder(givenUser, givenCertificate);
+        Order resultOrder = orderMapper.mapToOrder(givenCreateDto, givenUser, givenCertificate);
 
         User actualUser = resultOrder.getUser();
         GiftCertificate actualCertificate = resultOrder.getGiftCertificate();

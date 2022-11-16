@@ -20,67 +20,69 @@ public class GiftCertificateDataSupplier {
 
     public static GiftCertificate getGiftCertificate() {
         return GiftCertificate.builder()
-            .id(DEFAULT_ID)
-            .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION)
-            .price(DEFAULT_PRICE)
-            .duration(DEFAULT_DURATION)
-            .createDate(DEFAULT_DATE)
-            .lastUpdateDate(DEFAULT_DATE)
-            .build();
+                   .id(DEFAULT_ID)
+                   .name(DEFAULT_NAME)
+                   .description(DEFAULT_DESCRIPTION)
+                   .price(DEFAULT_PRICE)
+                   .duration(DEFAULT_DURATION)
+                   .createDate(DEFAULT_DATE)
+                   .lastUpdateDate(DEFAULT_DATE)
+                   .build();
     }
 
     public static GiftCertificateDto getGiftCertificateDto() {
         return GiftCertificateDto.builder()
-            .id(DEFAULT_ID)
-            .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION)
-            .price(DEFAULT_PRICE)
-            .duration(DEFAULT_DURATION)
-            .createDate(DEFAULT_DATE)
-            .lastUpdateDate(DEFAULT_DATE)
-            .tags(Collections.emptyList())
-            .build();
+                   .id(DEFAULT_ID)
+                   .name(DEFAULT_NAME)
+                   .description(DEFAULT_DESCRIPTION)
+                   .price(DEFAULT_PRICE)
+                   .duration(DEFAULT_DURATION)
+                   .createDate(DEFAULT_DATE)
+                   .lastUpdateDate(DEFAULT_DATE)
+                   .tags(Collections.emptyList())
+                   .build();
     }
 
     public static GiftCertificateCreateDto getGiftCertificateCreateDto() {
         return GiftCertificateCreateDto.builder()
-            .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION)
-            .price(DEFAULT_PRICE)
-            .duration(DEFAULT_DURATION)
-            .tagNames(Collections.emptyList())
-            .build();
+                   .id(DEFAULT_ID)
+                   .name(DEFAULT_NAME)
+                   .description(DEFAULT_DESCRIPTION)
+                   .price(DEFAULT_PRICE)
+                   .duration(DEFAULT_DURATION)
+                   .tagNames(Collections.emptyList())
+                   .build();
     }
 
     public static GiftCertificateUpdateDto getGiftCertificateUpdateDto() {
         return GiftCertificateUpdateDto.builder()
-            .name("new_name")
-            .duration(55)
-            .build();
+                   .name("new_name")
+                   .duration(55)
+                   .build();
     }
 
     public static GiftCertificate getGiftCertificateMappedFromCreateDto() {
         return GiftCertificate.builder()
-            .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION)
-            .price(DEFAULT_PRICE)
-            .duration(DEFAULT_DURATION)
-            .createDate(DEFAULT_DATE)
-            .lastUpdateDate(DEFAULT_DATE)
-            .build();
+                   .id(DEFAULT_ID)
+                   .name(DEFAULT_NAME)
+                   .description(DEFAULT_DESCRIPTION)
+                   .price(DEFAULT_PRICE)
+                   .duration(DEFAULT_DURATION)
+                   .createDate(DEFAULT_DATE)
+                   .lastUpdateDate(DEFAULT_DATE)
+                   .build();
     }
 
     public static GiftCertificate getGiftCertificateMergedWithUpdateDto() {
         return GiftCertificate.builder()
-            .name("new_name")
-            .duration(55)
-            .id(DEFAULT_ID)
-            .description(DEFAULT_DESCRIPTION)
-            .price(DEFAULT_PRICE)
-            .createDate(DEFAULT_DATE)
-            .lastUpdateDate(DEFAULT_DATE)
-            .build();
+                   .name("new_name")
+                   .duration(55)
+                   .id(DEFAULT_ID)
+                   .description(DEFAULT_DESCRIPTION)
+                   .price(DEFAULT_PRICE)
+                   .createDate(DEFAULT_DATE)
+                   .lastUpdateDate(DEFAULT_DATE)
+                   .build();
     }
 
     public static List<GiftCertificate> getListOfSingleGiftCertificate() {

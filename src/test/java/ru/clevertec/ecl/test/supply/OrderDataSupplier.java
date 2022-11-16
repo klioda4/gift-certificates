@@ -16,43 +16,45 @@ public class OrderDataSupplier {
 
     public static Order getOrder() {
         return Order.builder()
-            .id(DEFAULT_ID)
-            .cost(DEFAULT_COST)
-            .duration(DEFAULT_DURATION)
-            .purchaseDate(DEFAULT_PURCHASE_DATE)
-            .user(UserDataSupplier.getUser())
-            .giftCertificate(GiftCertificateDataSupplier.getGiftCertificate())
-            .build();
+                   .id(DEFAULT_ID)
+                   .cost(DEFAULT_COST)
+                   .duration(DEFAULT_DURATION)
+                   .purchaseDate(DEFAULT_PURCHASE_DATE)
+                   .user(UserDataSupplier.getUser())
+                   .giftCertificate(GiftCertificateDataSupplier.getGiftCertificate())
+                   .build();
     }
 
     public static Order getOrderMappedFromCreateOrder(LocalDateTime purchaseDate) {
         return Order.builder()
-            .cost(DEFAULT_COST)
-            .duration(DEFAULT_DURATION)
-            .purchaseDate(purchaseDate)
-            .user(UserDataSupplier.getUser())
-            .giftCertificate(GiftCertificateDataSupplier.getGiftCertificate())
-            .build();
+                   .id(DEFAULT_ID)
+                   .cost(DEFAULT_COST)
+                   .duration(DEFAULT_DURATION)
+                   .purchaseDate(purchaseDate)
+                   .user(UserDataSupplier.getUser())
+                   .giftCertificate(GiftCertificateDataSupplier.getGiftCertificate())
+                   .build();
     }
 
     public static OrderDto getOrderDto() {
         return OrderDto.builder()
-            .id(DEFAULT_ID)
-            .cost(DEFAULT_COST)
-            .duration(DEFAULT_DURATION)
-            .purchaseDate(DEFAULT_PURCHASE_DATE)
-            .giftCertificate(GiftCertificateInfoDto.builder()
-                                 .id(GiftCertificateDataSupplier.DEFAULT_ID)
-                                 .name(GiftCertificateDataSupplier.DEFAULT_NAME)
-                                 .description(GiftCertificateDataSupplier.DEFAULT_DESCRIPTION)
-                                 .build())
-            .build();
+                   .id(DEFAULT_ID)
+                   .cost(DEFAULT_COST)
+                   .duration(DEFAULT_DURATION)
+                   .purchaseDate(DEFAULT_PURCHASE_DATE)
+                   .giftCertificate(GiftCertificateInfoDto.builder()
+                                        .id(GiftCertificateDataSupplier.DEFAULT_ID)
+                                        .name(GiftCertificateDataSupplier.DEFAULT_NAME)
+                                        .description(GiftCertificateDataSupplier.DEFAULT_DESCRIPTION)
+                                        .build())
+                   .build();
     }
 
     public static OrderCreateDto getOrderCreateDto() {
         return OrderCreateDto.builder()
-            .userId(1L)
-            .giftCertificateId(1L)
-            .build();
+                   .id(DEFAULT_ID)
+                   .userId(1L)
+                   .giftCertificateId(1L)
+                   .build();
     }
 }

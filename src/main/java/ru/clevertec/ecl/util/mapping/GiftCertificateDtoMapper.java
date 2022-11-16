@@ -15,7 +15,6 @@ public interface GiftCertificateDtoMapper {
 
     GiftCertificateDto mapToDto(GiftCertificate certificate);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "createDate", ignore = true)
     @Mapping(target = "lastUpdateDate", ignore = true)

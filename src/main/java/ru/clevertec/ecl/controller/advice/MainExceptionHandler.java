@@ -18,6 +18,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import ru.clevertec.ecl.dto.response.ExceptionResponse;
 import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.exception.IntegrityViolationException;
+import ru.clevertec.ecl.exception.SequenceConflictException;
+import ru.clevertec.ecl.exception.ServerDownException;
 import ru.clevertec.ecl.util.constant.ErrorDescription;
 
 @Slf4j
@@ -91,7 +93,7 @@ public class MainExceptionHandler {
 
     @ExceptionHandler(IntegrityViolationException.class)
     public ResponseEntity<ExceptionResponse> handleIntegrityViolationException(IntegrityViolationException e) {
-        log.info(e.getMessage());
+        log.info(e.getMessage(), e);
         return getResponseEntity(e.getErrorDescription().getStatusCode(),
                                  e.getErrorDescription().getErrorCode(),
                                  e.getMessage());
@@ -103,6 +105,29 @@ public class MainExceptionHandler {
         return getResponseEntity(ErrorDescription.METHOD_NOT_SUPPORTED.getStatusCode(),
                                  ErrorDescription.METHOD_NOT_SUPPORTED.getErrorCode(),
                                  HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
+    }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<ExceptionResponse> handleUnsupportedOperationException(Exception e) {
+        ErrorDescription errorDescription = ErrorDescription.INVALID_REQUEST_PATH_OR_METHOD;
+        log.info(errorDescription.getDefaultMessage(), e);
+        return getResponseEntity(errorDescription);
+    }
+
+    @ExceptionHandler(ServerDownException.class)
+    public ResponseEntity<ExceptionResponse> handleServerDownException(Exception e) {
+        ErrorDescription errorDescription = ErrorDescription.NODE_CONNECTION_ERROR;
+        log.warn(e.getMessage());
+        return getResponseEntity(errorDescription);
+    }
+
+    @ExceptionHandler(SequenceConflictException.class)
+    public ResponseEntity<ExceptionResponse> handleSequenceConflictException(Exception e) {
+        ErrorDescription errorDescription = ErrorDescription.SEQUENCE_CONFLICT;
+        log.info(e.getMessage());
+        return getResponseEntity(HttpStatus.valueOf(errorDescription.getStatusCode()),
+                                 errorDescription.getErrorCode(),
+                                 e.getMessage());
     }
 
     private ResponseEntity<ExceptionResponse> getResponseEntity(HttpStatus status, int errorCode, String errorMessage) {

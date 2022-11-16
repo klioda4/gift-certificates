@@ -29,6 +29,7 @@ dependencyManagement {
         dependency 'com.cosium.spring.data:spring-data-jpa-entity-graph:2.7.10'
         dependency 'org.liquibase:liquibase-core:4.16.1'
         dependency 'commons-io:commons-io:2.11.0'
+        dependency 'com.google.guava:guava:31.1-jre'
     }
 }
 
@@ -53,6 +54,7 @@ dependencies {
     implementation 'com.cosium.spring.data:spring-data-jpa-entity-graph'
     implementation 'com.google.code.gson:gson'
     implementation 'commons-io:commons-io'
+    implementation 'com.google.guava:guava'
     testRuntimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mapstruct:mapstruct'

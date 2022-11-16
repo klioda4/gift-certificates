@@ -28,7 +28,7 @@ public class OrderFacadeImpl implements OrderFacade {
     @Override
     public Page<OrderDto> findAllByUserId(long userId, Pageable pageable) {
         return orderService.findAllByUserId(userId, pageable)
-            .map(orderMapper::mapToDto);
+                   .map(orderMapper::mapToDto);
     }
 
     @Override

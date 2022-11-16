@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ru.clevertec.ecl.cluster.interceptor.CommitLogFilteringInterceptor;
 import ru.clevertec.ecl.cluster.interceptor.EntityInterceptor;
 import ru.clevertec.ecl.cluster.interceptor.OrderInterceptor;
 
@@ -14,20 +15,30 @@ import ru.clevertec.ecl.cluster.interceptor.OrderInterceptor;
 public class AppWebMvcConfigurer implements WebMvcConfigurer {
 
     private static final String ORDERS_PATH_PATTERN = "/v1/orders/**";
+    private static final String USERS_PATH_PATTERN = "/v1/users/**";
     private static final String TAGS_PATH_PATTERN = "/v1/tags/**";
     private static final String CERTIFICATES_PATH_PATTERN = "/v1/gift-certificates/**";
+    private static final String SEQUENCE_PATH_PATTERN = "/v1/*/sequence/*";
+    private static final String COMMIT_LOG_CREATION_PATH = "/commit-log";
 
     private final OrderInterceptor orderInterceptor;
     private final EntityInterceptor entityInterceptor;
+    private final CommitLogFilteringInterceptor commitLogFilteringInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(orderInterceptor)
-            .addPathPatterns(ORDERS_PATH_PATTERN);
+            .addPathPatterns(ORDERS_PATH_PATTERN)
+            .excludePathPatterns(SEQUENCE_PATH_PATTERN);
 
         registry.addInterceptor(entityInterceptor)
             .addPathPatterns(TAGS_PATH_PATTERN,
-                             CERTIFICATES_PATH_PATTERN);
+                             CERTIFICATES_PATH_PATTERN,
+                             USERS_PATH_PATTERN)
+            .excludePathPatterns(SEQUENCE_PATH_PATTERN);
+
+        registry.addInterceptor(commitLogFilteringInterceptor)
+            .addPathPatterns(COMMIT_LOG_CREATION_PATH);
     }
 
     @Override

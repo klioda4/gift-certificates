@@ -68,7 +68,7 @@ class OrderServiceImplTest {
             .thenReturn(getUser());
         when(certificateService.findByIdLazy(1L))
             .thenReturn(getCertificate());
-        when(orderMapper.createOrder(getUser(), getCertificate()))
+        when(orderMapper.mapToOrder(getOrderCreateDto(), getUser(), getCertificate()))
             .thenReturn(getOrder());
 
         Order actualOrder = orderService.create(orderCreateDto);

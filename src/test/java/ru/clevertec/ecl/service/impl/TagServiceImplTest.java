@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ru.clevertec.ecl.test.supply.TagDataSupplier.getListOfSingleTag;
 import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTag;
-import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTagMappedFromPutDto;
+import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTagCreateDto;
 import static ru.clevertec.ecl.test.supply.TagDataSupplier.getTagPutDto;
 
 import java.util.Optional;
@@ -21,6 +21,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import ru.clevertec.ecl.dto.request.TagCreateDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.exception.IntegrityViolationException;
@@ -87,27 +88,26 @@ class TagServiceImplTest {
     }
 
     @Test
-    void givenPutDto_whenCreate_thenSaveAndReturnExpectedTag() {
-        TagPutDto givenPutDto = getTagPutDto();
-        stubMapperMapPutDtoToEntity();
-        when(tagRepository.saveAndFlush(getTagMappedFromPutDto()))
-            .thenReturn(getTag());
+    void givenCreateDto_whenCreate_thenSaveAndReturnExpectedTag() {
+        TagCreateDto givenCreateDto = getTagCreateDto();
+        StubHelper.stubRepositorySaveAndFlush(tagRepository);
+        stubMapperMapToTag();
 
-        Tag actualTag = tagService.create(givenPutDto);
+        Tag actualTag = tagService.create(givenCreateDto);
 
         Tag expectedTag = getTag();
         assertEquals(expectedTag, actualTag);
     }
 
     @Test
-    void givenPutDtoWithNotUniqueTagName_whenCreate_thenThrowIntegrityViolationException() {
-        TagPutDto givenPutDto = getTagPutDto();
-        stubMapperMapPutDtoToEntity();
-        when(tagRepository.saveAndFlush(getTagMappedFromPutDto()))
+    void givenCreateDtoWithNotUniqueTagName_whenCreate_thenThrowIntegrityViolationException() {
+        TagCreateDto givenCreateDto = getTagCreateDto();
+        stubMapperMapToTag();
+        when(tagRepository.saveAndFlush(getTag()))
             .thenThrow(DataIntegrityViolationException.class);
 
         assertThrows(IntegrityViolationException.class,
-                     () -> tagService.create(givenPutDto));
+                     () -> tagService.create(givenCreateDto));
     }
 
     @Test
@@ -115,7 +115,6 @@ class TagServiceImplTest {
         long givenId = 1;
         TagPutDto givenPutDto = getTagPutDto();
         stubRepositoryFindById();
-        stubMapperMapPutDtoToEntity();
         StubHelper.stubRepositorySaveAndFlush(tagRepository);
 
         Tag actualTag = tagService.updateById(givenId, givenPutDto);
@@ -129,7 +128,6 @@ class TagServiceImplTest {
         long givenId = 1;
         TagPutDto givenPutDto = getTagPutDto();
         stubRepositoryFindById();
-        stubMapperMapPutDtoToEntity();
         when(tagRepository.saveAndFlush(any()))
             .thenThrow(DataIntegrityViolationException.class);
 
@@ -154,23 +152,21 @@ class TagServiceImplTest {
         when(tagRepository.findByName(givenTagName))
             .thenReturn(Optional.of(getTag()));
 
-        Tag actualTag = tagService.findOrCreateByName(givenTagName);
+        Tag actualTag = tagService.findByName(givenTagName);
 
         Tag expectedTag = getTag();
         assertEquals(expectedTag, actualTag);
     }
 
     @Test
-    void givenNewTagName_whenFindOrCreateByName_thenSaveAndReturnExpectedTag() {
-        String givenNewTagName = "new-tag";
-        when(tagRepository.findByName(givenNewTagName))
-            .thenReturn(Optional.empty());
-        when(tagRepository.save(new Tag(0L, "new-tag")))
-            .thenReturn(new Tag(1L, "new-tag"));
+    void givenName_whenFindByName_thenReturnExpectedTag() {
+        String givenTagName = "default-tag";
+        when(tagRepository.findByName(givenTagName))
+            .thenReturn(Optional.of(getTag()));
 
-        Tag actualTag = tagService.findOrCreateByName(givenNewTagName);
+        Tag actualTag = tagService.findByName(givenTagName);
 
-        Tag expectedTag = new Tag(1L, "new-tag");
+        Tag expectedTag = getTag();
         assertEquals(expectedTag, actualTag);
     }
 
@@ -184,9 +180,9 @@ class TagServiceImplTest {
                 getTag()));
     }
 
-    private void stubMapperMapPutDtoToEntity() {
-        when(tagMapper.mapPutDtoToEntity(getTagPutDto()))
-            .thenReturn(getTagMappedFromPutDto());
+    private void stubMapperMapToTag() {
+        when(tagMapper.mapToTag(getTagCreateDto()))
+            .thenReturn(getTag());
     }
 
     @Value

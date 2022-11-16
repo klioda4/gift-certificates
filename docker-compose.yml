@@ -1,64 +1,180 @@
 version: '3.8'
 services:
-  cert-node1: &node
+  cert-node11: &node
     build: ./
-    container_name: 'cert-node1'
+    container_name: 'cert-node11'
     restart: unless-stopped
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node1:5432/gift-certificate-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node11:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=3
+      - CLUSTER_CURRENT_NODE=cert-node11:8080
+      - CLUSTER_URL_PREFIX=http://
     ports:
       - '8000:8080'
     depends_on:
-      - db-cert-node1
-    networks:
-      - cluster-network
+      - db-cert-node11
 
-  cert-node2:
+  cert-node12:
     <<: *node
-    container_name: 'cert-node2'
+    container_name: 'cert-node12'
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node2:5432/gift-certificate-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node12:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=3
+      - CLUSTER_CURRENT_NODE=cert-node12:8080
+      - CLUSTER_URL_PREFIX=http://
     ports:
       - '8001:8080'
     depends_on:
-      - db-cert-node2
+      - db-cert-node12
 
-  cert-node3:
+  cert-node13:
     <<: *node
-    container_name: 'cert-node3'
+    container_name: 'cert-node13'
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node3:5432/gift-certificate-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node13:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=3
+      - CLUSTER_CURRENT_NODE=cert-node13:8080
+      - CLUSTER_URL_PREFIX=http://
     ports:
       - '8002:8080'
     depends_on:
-      - db-cert-node3
+      - db-cert-node13
 
-  db-cert-node1: &db
+  cert-node21:
+    <<: *node
+    container_name: 'cert-node21'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node21:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=1
+      - CLUSTER_CURRENT_NODE=cert-node21:8080
+      - CLUSTER_URL_PREFIX=http://
+    ports:
+      - '8100:8080'
+    depends_on:
+      - db-cert-node21
+
+  cert-node22:
+    <<: *node
+    container_name: 'cert-node22'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node22:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=1
+      - CLUSTER_CURRENT_NODE=cert-node22:8080
+      - CLUSTER_URL_PREFIX=http://
+    ports:
+      - '8101:8080'
+    depends_on:
+      - db-cert-node22
+
+  cert-node23:
+    <<: *node
+    container_name: 'cert-node23'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node23:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=1
+      - CLUSTER_CURRENT_NODE=cert-node23:8080
+      - CLUSTER_URL_PREFIX=http://
+    ports:
+      - '8102:8080'
+    depends_on:
+      - db-cert-node23
+
+  cert-node31:
+    <<: *node
+    container_name: 'cert-node31'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node31:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=2
+      - CLUSTER_CURRENT_NODE=cert-node31:8080
+      - CLUSTER_URL_PREFIX=http://
+    ports:
+      - '8200:8080'
+    depends_on:
+      - db-cert-node31
+
+  cert-node32:
+    <<: *node
+    container_name: 'cert-node32'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node32:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=2
+      - CLUSTER_CURRENT_NODE=cert-node32:8080
+      - CLUSTER_URL_PREFIX=http://
+    ports:
+      - '8201:8080'
+    depends_on:
+      - db-cert-node32
+
+  cert-node33:
+    <<: *node
+    container_name: 'cert-node33'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-cert-node33:5432/gift-certificate-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_PARAMETERS_startValue=2
+      - CLUSTER_CURRENT_NODE=cert-node33:8080
+      - CLUSTER_URL_PREFIX=http://
+    ports:
+      - '8202:8080'
+    depends_on:
+      - db-cert-node33
+
+  db-cert-node11: &db
     image: postgres:15.0
-    container_name: 'db-cert-node1'
+    container_name: 'db-cert-node11'
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: gift-certificate-db
-    ports:
-      - '5440:5432'
-    networks:
-      - cluster-network
+#    ports:
+#      - '5440:5432'
 
-  db-cert-node2:
+  db-cert-node12:
     <<: *db
-    container_name: 'db-cert-node2'
-    ports:
-      - '5441:5432'
+    container_name: 'db-cert-node12'
 
-  db-cert-node3:
+  db-cert-node13:
     <<: *db
-    container_name: 'db-cert-node3'
-    ports:
-      - '5442:5432'
+    container_name: 'db-cert-node13'
 
-networks:
-  cluster-network:
-    driver: bridge
-    name: cluster-network
+  db-cert-node21:
+    <<: *db
+    container_name: 'db-cert-node21'
+
+  db-cert-node22:
+    <<: *db
+    container_name: 'db-cert-node22'
+
+  db-cert-node23:
+    <<: *db
+    container_name: 'db-cert-node23'
+
+  db-cert-node31:
+    <<: *db
+    container_name: 'db-cert-node31'
+
+  db-cert-node32:
+    <<: *db
+    container_name: 'db-cert-node32'
+
+  db-cert-node33:
+    <<: *db
+    container_name: 'db-cert-node33'

@@ -19,7 +19,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public Page<UserDto> findAll(Pageable pageable) {
         return userService.findAll(pageable)
-            .map(userMapper::mapToDto);
+                   .map(userMapper::mapToDto);
     }
 
     @Override

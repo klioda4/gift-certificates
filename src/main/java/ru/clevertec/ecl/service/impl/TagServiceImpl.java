@@ -1,11 +1,13 @@
 package ru.clevertec.ecl.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.clevertec.ecl.dto.request.TagCreateDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.exception.IntegrityViolationException;
@@ -18,6 +20,7 @@ import ru.clevertec.ecl.util.constant.ErrorDescription;
 import ru.clevertec.ecl.util.mapping.TagDtoMapper;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class TagServiceImpl implements TagService {
@@ -35,7 +38,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag findById(long id) {
         return tagRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(TAG_ENTITY_NAME, Tag_.ID, id));
+                   .orElseThrow(() -> new EntityNotFoundException(TAG_ENTITY_NAME, Tag_.ID, id));
     }
 
     @Override
@@ -44,26 +47,33 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Tag findByName(String name) {
+        return tagRepository.findByName(name)
+                   .orElseThrow(() -> new EntityNotFoundException(TAG_ENTITY_NAME, Tag_.NAME, name));
+    }
+
+    @Override
     @Transactional
-    public Tag create(TagPutDto createDto) {
+    public Tag create(TagCreateDto createDto) {
         try {
-            Tag newTag = tagMapper.mapPutDtoToEntity(createDto);
+            Tag newTag = tagMapper.mapToTag(createDto);
             return tagRepository.saveAndFlush(newTag);
         } catch (DataIntegrityViolationException e) {
-            throw createTagIntegrityViolationException(createDto.getName());
+            log.info("Data integrity exception: {}", e.getMessage());
+            throw createTagIntegrityViolationException(e, createDto.getName());
         }
     }
 
     @Override
     @Transactional
     public Tag updateById(long id, TagPutDto putDto) {
-        findById(id);
         try {
-            Tag tagToPut = tagMapper.mapPutDtoToEntity(putDto);
-            tagToPut.setId(id);
-            return tagRepository.saveAndFlush(tagToPut);
+            Tag existingTag = findById(id);
+            tagMapper.updateTag(existingTag, putDto);
+            return tagRepository.saveAndFlush(existingTag);
         } catch (DataIntegrityViolationException e) {
-            throw createTagIntegrityViolationException(putDto.getName());
+            log.info("Data integrity exception: {}", e.getMessage());
+            throw createTagIntegrityViolationException(e, putDto.getName());
         }
     }
 
@@ -74,17 +84,8 @@ public class TagServiceImpl implements TagService {
         tagRepository.delete(tagToDelete);
     }
 
-    @Override
-    @Transactional
-    public Tag findOrCreateByName(String name) {
-        return tagRepository.findByName(name)
-            .orElseGet(() -> tagRepository.save(Tag.builder()
-                                                    .name(name)
-                                                    .build()));
-    }
-
-    private IntegrityViolationException createTagIntegrityViolationException(String tagName) {
-        return new IntegrityViolationException(TAG_ENTITY_NAME, Tag_.NAME, tagName,
+    private IntegrityViolationException createTagIntegrityViolationException(Exception e, String tagName) {
+        return new IntegrityViolationException(e, TAG_ENTITY_NAME, Tag_.NAME, tagName,
                                                ErrorDescription.TAG_ALREADY_EXISTS);
     }
 }

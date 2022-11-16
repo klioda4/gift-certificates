@@ -2,6 +2,7 @@ package ru.clevertec.ecl.test.supply;
 
 import java.util.Collections;
 import java.util.List;
+import ru.clevertec.ecl.dto.request.TagCreateDto;
 import ru.clevertec.ecl.dto.request.TagPutDto;
 import ru.clevertec.ecl.dto.response.TagDto;
 import ru.clevertec.ecl.model.Tag;
@@ -19,12 +20,12 @@ public class TagDataSupplier {
         return new TagDto(DEFAULT_ID, DEFAULT_NAME);
     }
 
-    public static TagPutDto getTagPutDto() {
-        return new TagPutDto(DEFAULT_NAME);
+    public static TagCreateDto getTagCreateDto() {
+        return new TagCreateDto(DEFAULT_ID, DEFAULT_NAME);
     }
 
-    public static Tag getTagMappedFromPutDto() {
-        return new Tag(0L, DEFAULT_NAME);
+    public static TagPutDto getTagPutDto() {
+        return new TagPutDto(DEFAULT_NAME);
     }
 
     public static List<Tag> getListOfSingleTag() {

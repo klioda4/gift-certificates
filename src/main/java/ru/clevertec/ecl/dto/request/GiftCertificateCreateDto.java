@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Value;
@@ -12,6 +13,9 @@ import lombok.Value;
 @Value
 @Builder
 public class GiftCertificateCreateDto {
+
+    @Positive
+    Long id;
 
     @NotBlank
     String name;

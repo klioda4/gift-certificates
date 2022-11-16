@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
@@ -28,10 +26,9 @@ import ru.clevertec.ecl.model.entityGraph.EntityGraphNames;
     name = EntityGraphNames.ORDER_WITH_CERTIFICATE,
     attributeNodes = @NamedAttributeNode(Order_.GIFT_CERTIFICATE))
 @Table(name = "orders")
-public class Order {
+public class Order extends PersistableEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private BigDecimal cost;
