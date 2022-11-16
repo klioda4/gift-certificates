@@ -13,11 +13,19 @@ public class IntegrityViolationException extends RuntimeException {
     private final Object value;
     private final ErrorDescription errorDescription;
 
-    public IntegrityViolationException(String objectClassName,
-                                       String fieldName,
-                                       Object value,
+    public IntegrityViolationException(String objectClassName, String fieldName, Object value,
                                        ErrorDescription errorDescription) {
         super(getFormattedMessage(objectClassName, fieldName, value, errorDescription.getDefaultMessage()));
+        this.objectClassName = objectClassName;
+        this.fieldName = fieldName;
+        this.value = value;
+        this.errorDescription = errorDescription;
+    }
+
+    public IntegrityViolationException(Throwable cause, String objectClassName, String fieldName, Object value,
+                                       ErrorDescription errorDescription) {
+        super(getFormattedMessage(objectClassName, fieldName, value, errorDescription.getDefaultMessage()),
+              cause);
         this.objectClassName = objectClassName;
         this.fieldName = fieldName;
         this.value = value;

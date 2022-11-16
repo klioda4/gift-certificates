@@ -4,4 +4,8 @@ databaseChangeLog:
   - include:
       file: classpath:/db/query/fill-tables.sql
   - include:
+      file: classpath:/db/query/fill-users.sql
+  - include:
       file: classpath:/db/query/update-postgres-sequences.sql
+  - include:
+      file: classpath:/db/changelog/updates/update-cluster-sequences.xml

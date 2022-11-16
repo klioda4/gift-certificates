@@ -9,6 +9,9 @@ import lombok.Value;
 public class OrderCreateDto {
 
     @Positive
+    Long id;
+
+    @Positive
     Long userId;
 
     @Positive

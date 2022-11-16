@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 import ru.clevertec.ecl.cluster.handler.OrderRequestHandler;
 import ru.clevertec.ecl.cluster.request.CachedHttpServletRequest;
 import ru.clevertec.ecl.cluster.util.RequestCheckHelper;
@@ -25,7 +26,7 @@ public class OrderInterceptor implements HandlerInterceptor {
         throws IOException {
 
         log.info("{} request to url {}", request.getMethod(), request.getRequestURL());
-        if (RequestCheckHelper.isForwarded(request)) {
+        if (RequestCheckHelper.needToSkipHandling(request)) {
             log.debug("Skip handling - request already handled");
             return true;
         }
@@ -36,23 +37,27 @@ public class OrderInterceptor implements HandlerInterceptor {
         if (httpMethod == HttpMethod.GET && RequestPathParser.isRequestById(servletPath)) {
             return orderRequestHandler.doGetById(cachedRequest, response);
 
-        } else if (((httpMethod == HttpMethod.PUT) || (httpMethod == HttpMethod.PATCH))
-                       && RequestPathParser.isRequestById(servletPath)) {
-            return orderRequestHandler.doUpdateById(cachedRequest, response);
-
         } else if ((httpMethod == HttpMethod.GET) && (RequestPathParser.isRequestToAll(servletPath)
-                                                          || RequestPathParser.isGetAllOrdersByUserId(servletPath))) {
+                                                          || RequestPathParser.isFindAllOrdersByUserId(servletPath))) {
             orderRequestHandler.doGetAll(cachedRequest, response);
             return false;
 
         } else if ((httpMethod == HttpMethod.POST) && RequestPathParser.isRequestToAll(servletPath)) {
             return orderRequestHandler.doCreate(cachedRequest, response);
 
-        } else if ((httpMethod == HttpMethod.DELETE) && RequestPathParser.isRequestById(servletPath)) {
-            return orderRequestHandler.doDelete(cachedRequest, response);
+        } else if (((httpMethod == HttpMethod.PUT) || (httpMethod == HttpMethod.PATCH)
+                        || (httpMethod == HttpMethod.DELETE)) && RequestPathParser.isRequestById(servletPath)) {
+            return orderRequestHandler.doModifyById(cachedRequest, response);
 
         } else {
             throw new UnsupportedOperationException("Unknown operation to orders");
         }
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                           ModelAndView modelAndView) {
+        RequestCheckHelper.getCommitLogId(request)
+            .ifPresent(orderRequestHandler::markCommitLogAsApplied);
     }
 }

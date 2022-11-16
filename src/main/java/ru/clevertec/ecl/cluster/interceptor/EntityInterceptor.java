@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.cluster.interceptor;
 
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import ru.clevertec.ecl.cluster.handler.EntityRequestHandler;
-import ru.clevertec.ecl.cluster.nodeInfo.InterceptorConstants;
 import ru.clevertec.ecl.cluster.request.CachedHttpServletRequest;
 import ru.clevertec.ecl.cluster.util.RequestCheckHelper;
 import ru.clevertec.ecl.cluster.util.RequestPathParser;
@@ -22,28 +22,29 @@ public class EntityInterceptor implements HandlerInterceptor {
     private final EntityRequestHandler entityRequestHandler;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+        throws IOException {
+
         log.info("{} request to url {}", request.getMethod(), request.getRequestURL());
-        if (RequestCheckHelper.isForwarded(request)) {
+        if (RequestCheckHelper.needToSkipHandling(request)) {
             log.debug("Request is forwarded - skip handling");
             return true;
         }
 
         String servletPath = request.getServletPath();
         HttpMethod httpMethod = HttpMethod.valueOf(request.getMethod());
+        CachedHttpServletRequest cachedRequest = (CachedHttpServletRequest) request;
         if (httpMethod == HttpMethod.GET) {
             log.debug("Accept GET request");
             return true;
 
-        } else if (((httpMethod == HttpMethod.PUT) || (httpMethod == HttpMethod.PATCH))
+        } else if ((httpMethod == HttpMethod.PUT) || (httpMethod == HttpMethod.PATCH)
                        || (httpMethod == HttpMethod.DELETE)) {
-            request.setAttribute(InterceptorConstants.NEED_TO_DISTRIBUTE_ATTRIBUTE, true);
-            log.debug("Accept request for change data");
+            entityRequestHandler.doModifyingById(cachedRequest, response);
             return true;
 
         } else if (httpMethod == HttpMethod.POST && RequestPathParser.isRequestToAll(servletPath)) {
-            request.setAttribute(InterceptorConstants.NEED_TO_DISTRIBUTE_ATTRIBUTE, true);
-            log.debug("Accept CREATE request");
+            entityRequestHandler.doCreate(cachedRequest, response);
             return true;
 
         } else {
@@ -54,10 +55,7 @@ public class EntityInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) {
-        if (RequestCheckHelper.doesNeedToDistribute(request)) {
-            log.debug("Distribute request to all nodes");
-            CachedHttpServletRequest cachedRequest = (CachedHttpServletRequest) request;
-            entityRequestHandler.distributeRequest(cachedRequest, response);
-        }
+        RequestCheckHelper.getCommitLogId(request)
+            .ifPresent(entityRequestHandler::markCommitLogAsApplied);
     }
 }

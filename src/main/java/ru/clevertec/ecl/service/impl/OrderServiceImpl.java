@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userService.findById(createDto.getUserId());
         GiftCertificate certificateOfOrder = certificateService.findByIdLazy(createDto.getGiftCertificateId());
         return orderRepository.save(
-            orderMapper.createOrder(user, certificateOfOrder));
+            orderMapper.mapToOrder(createDto, user, certificateOfOrder));
     }
 
     @Override

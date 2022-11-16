@@ -5,13 +5,18 @@ import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 import ru.clevertec.ecl.util.constant.AppConstants;
 
+
 public class CachedHttpServletRequest extends HttpServletRequestWrapper {
 
-    private final String cachedBody;
+    @Getter
+    @Setter
+    private String body;
 
     /**
      * Constructs a request object wrapping the given request.
@@ -21,16 +26,12 @@ public class CachedHttpServletRequest extends HttpServletRequestWrapper {
      */
     public CachedHttpServletRequest(HttpServletRequest request) throws IOException {
         super(request);
-        cachedBody = readOriginalBody();
+        body = readOriginalBody();
     }
 
     @Override
     public ServletInputStream getInputStream() {
-        return new CachedServletInputStream(cachedBody.getBytes());
-    }
-
-    public String getBody() {
-        return cachedBody;
+        return new CachedServletInputStream(body.getBytes());
     }
 
     private String readOriginalBody() throws IOException {

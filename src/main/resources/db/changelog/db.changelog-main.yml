@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       file: classpath:/db/changelog/updates/create-schema-changelog.sql
+  - include:
+      file: classpath:/db/query/fill-users.sql
+  - include:
+      file: classpath:/db/changelog/updates/update-cluster-sequences.xml

@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import ru.clevertec.ecl.dto.request.OrderCreateDto;
 import ru.clevertec.ecl.dto.request.OrderPutDto;
 import ru.clevertec.ecl.dto.response.OrderDto;
 import ru.clevertec.ecl.model.GiftCertificate;
@@ -19,13 +20,13 @@ public interface OrderDtoMapper {
     @Mapping(target = "duration", source = "order.duration")
     OrderDto mapToDto(Order order);
 
-    @Mapping(target = "id", ignore = true)
+    List<OrderDto> mapToDto(List<Order> orders);
+
+    @Mapping(target = "id", source = "createDto.id")
     @Mapping(target = "cost", source = "certificate.price")
     @Mapping(target = "giftCertificate", source = "certificate")
     @Mapping(target = "purchaseDate", expression = "java(LocalDateTime.now())")
-    Order createOrder(User user, GiftCertificate certificate);
-
-    List<OrderDto> mapToDto(List<Order> orders);
+    Order mapToOrder(OrderCreateDto createDto, User user, GiftCertificate certificate);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "purchaseDate", ignore = true)

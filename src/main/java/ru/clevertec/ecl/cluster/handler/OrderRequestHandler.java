@@ -11,9 +11,9 @@ public interface OrderRequestHandler {
 
     void doGetAll(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
-    boolean doUpdateById(CachedHttpServletRequest request, HttpServletResponse response) throws IOException;
-
     boolean doCreate(CachedHttpServletRequest request, HttpServletResponse response) throws IOException;
 
-    boolean doDelete(CachedHttpServletRequest request, HttpServletResponse response) throws IOException;
+    boolean doModifyById(CachedHttpServletRequest request, HttpServletResponse response) throws IOException;
+
+    void markCommitLogAsApplied(long commitLogId);
 }

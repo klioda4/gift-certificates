@@ -39,11 +39,9 @@ public class GiftCertificateController {
     private final GiftCertificateFacade certificateFacade;
 
     @GetMapping
-    public ResponseEntity<Page<GiftCertificateDto>> findAllByNameAndDescription(
-        @NotBlankOrNull String nameSample,
-        @NotBlankOrNull String descriptionSample,
-        Pageable pageable) {
-
+    public ResponseEntity<Page<GiftCertificateDto>> findAllByNameAndDescription(@NotBlankOrNull String nameSample,
+                                                                                @NotBlankOrNull String descriptionSample,
+                                                                                Pageable pageable) {
         log.info("GET request to /v1/gift-certificates with params: nameSample={}, descriptionSample={}, pageable={}",
                  nameSample, descriptionSample, pageable);
         Page<GiftCertificateDto> certificatesPage = certificateFacade.findAllByNameAndDescription(nameSample,

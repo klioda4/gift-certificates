@@ -1,7 +1,5 @@
 spring:
   datasource:
-    username: postgres
-    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:
@@ -13,7 +11,16 @@ spring:
     change-log: classpath:/db/changelog/db.changelog-local-postgres.yml
 
 cluster:
-  nodes:
-    - address: http://localhost:8000
-    - address: http://localhost:8001
-    - address: http://localhost:8002
+  shards:
+    - - localhost:8000
+      - localhost:8001
+      - localhost:8002
+
+    - - localhost:8100
+      - localhost:8101
+      - localhost:8102
+
+    - - localhost:8200
+      - localhost:8201
+      - localhost:8202
+  url-prefix: http://

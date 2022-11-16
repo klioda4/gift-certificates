@@ -77,7 +77,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificate create(GiftCertificateCreateDto creationDto) {
         GiftCertificate newCertificate = certificateMapper.mapCreationDtoToEntity(creationDto);
         List<String> tagNames = creationDto.getTagNames();
-        List<Tag> loadedTags = findOrCreateTags(tagNames);
+        List<Tag> loadedTags = loadTags(tagNames);
         newCertificate.setTags(loadedTags);
         return certificateRepository.save(newCertificate);
     }
@@ -106,17 +106,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         certificateRepository.delete(certificate);
     }
 
-    private List<Tag> findOrCreateTags(List<String> tagNames) {
+    private List<Tag> loadTags(List<String> tagNames) {
         return tagNames.stream()
-                   .map(tagService::findOrCreateByName)
+                   .map(tagService::findByName)
                    .collect(toList());
     }
 
     private void updateTagsIfPresent(GiftCertificate certificate, List<String> tagNames) {
-        if (tagNames == null || tagNames.isEmpty()) {
+        if ((tagNames == null) || tagNames.isEmpty()) {
             return;
         }
-        List<Tag> loadedTags = findOrCreateTags(tagNames);
+        List<Tag> loadedTags = loadTags(tagNames);
         certificate.setTags(loadedTags);
     }
 
